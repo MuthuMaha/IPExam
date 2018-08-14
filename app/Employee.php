@@ -23,14 +23,14 @@ class Employee extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
-   //   public function roles()
-   //  {
-   //      return $this->belongsToMany('App\role');
-   //  }
+     public function roles()
+    {
+        return $this->belongsToMany('App\role');
+    }
 
-   // public function tokens () {
-   //      return $this->hasMany(Token::class, 'user_id', 'EMPLOYEE_ID');
-   //  }
+   public function tokens() {
+        return $this->hasMany(Token::class, 'user_id', 'EMPLOYEE_ID');
+    }
      
 
 }

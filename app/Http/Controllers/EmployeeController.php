@@ -107,63 +107,61 @@ class EmployeeController extends Controller
         $msg="This is old token";
         Auth::attempt([ 'PAYROLL_ID' => $request->get('PAYROLL_ID'), 'password' => $request->get('PASS_WORD') ]);
         if(Auth::id()){
-            //here im getting the campus_id
-            // $campus_id="54";
-            //Here Im getting the role for this particular ID
+            // here im getting the campus_id
+            $campus_id="54";
+            // Here Im getting the role for this particular ID
             // $role = DB::select('SELECT roles.role FROM `roles` INNER Join user_roles on roles.roll_id=user_roles.ROLL_ID inner join users on users.payroll_id=user_roles.payroll_id WHERE users.id="'.Auth::id().'"');
             // $role="";
-            // $role=DB::table('roles')
-            //       ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
-            //       ->join('users','users.payroll_id','=','user_roles.payroll_id')
-            //       ->where('users.id','=',Auth::id())
-            //       ->select('roles.role')
-            //       ->get();
+            $role=DB::table('roles')
+                  ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
+                  ->join('employees','employees.payroll_id','=','user_roles.payroll_id')
+                  ->where('employees.id','=',Auth::id())
+                  ->select('roles.role')
+                  ->get();
 
-                       //fetching exam details of logged in branch from t_
-                       // $exam=DB::select('select ea.test_code,ea.start_date,ea.last_date_to_upload,ea.last_time_to_upload,ea.sl from 1_exam_admin_create_exam as ea where  ea.STATE_ID in (select c.state_id from t_employee as e,t_campus as c where c.campus_id=e.campus_id and c.campus_id="54")');
+                       // fetching exam details of logged in branch from t_
+                       $exam=DB::select('select ea.test_code,ea.start_date,ea.last_date_to_upload,ea.last_time_to_upload,ea.sl from 1_exam_admin_create_exam as ea where  ea.STATE_ID in (select c.state_id from t_employee as e,t_campus as c where c.campus_id=e.campus_id and c.campus_id="54")');
                        // $exam= "";
                        // $exam=DB::table('1_exam_admin_create_exam as ea','t_employee as e','t_campus as c')
                                 
-            //fetching the token for particular ID
+            // fetching the token for particular ID
 
-            // $token=Token::whereUser_id(Auth::id())->pluck('access_token');
-            //Here Im getting the user data
-            // $client = User::find(Auth::id());
-            // $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
-           // if($uc){
-           //   $msg='Token expired and New Token generated';
-           // }
-            // if (!$token->count()) {
-            //     $str=str_random(10);
-            //     $token=Token::create([
-            //         'user_id'=>Auth::id(),
-            //         'expiry_time'=>'1',
-            //         'access_token' => Hash::make($str),
-            //     ]);
+            $token=Token::whereUser_id(Auth::id())->pluck('access_token');
+            // Here Im getting the user data
+            $client = Employee::find(Auth::id());
+            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
+           if($uc){
+             $msg='Token expired and New Token generated';
+           }
+            if (!$token->count()) {
+                $str=str_random(10);
+                $token=Token::create([
+                    'user_id'=>Auth::id(),
+                    'expiry_time'=>'1',
+                    'access_token' => Hash::make($str),
+                ]);
                 return [
-                        'success' => "done",
+                       'success' => ['token'=>$token->access_token,'Message'=>$msg],
+                        'Role'=>$role,
+                        'EMP_ID'=>Auth::id(),
+                        'EMP_Name'=>Auth::user()->name,
+                        'CAMPUS_ID'=>'54',
+                        'SUBJECT'=>'MATHS',
                         
-                        // 'Role'=>$role,
-                        // 'EMP_ID'=>Auth::id(),
-                        // 'EMP_Name'=>Auth::user()->name,
-                        // 'CAMPUS_ID'=>'54',
-                        // 'SUBJECT'=>'MATHS',
-                        
-                        // 'EXAM'=>$exam,
+                        'EXAM'=>$exam,
                     ];
          
-            // }
+            }
             
                return [
-                        'success' => "done",
+                       'success' => ['token'=>$token,'Message'=>$msg],
+                        'Role'=>$role,
+                        'EMP_ID'=>Auth::id(),
+                        'EMP_Name'=>Auth::user()->name,
+                        'CAMPUS_ID'=>'54',
+                        'SUBJECT'=>'MATHS',
                         
-                        // 'Role'=>$role,
-                        // 'EMP_ID'=>Auth::id(),
-                        // 'EMP_Name'=>Auth::user()->name,
-                        // 'CAMPUS_ID'=>'54',
-                        // 'SUBJECT'=>'MATHS',
-                        
-                        // 'EXAM'=>$exam,
+                        'EXAM'=>$exam,
                     ];
         }
         else{

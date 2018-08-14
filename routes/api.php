@@ -17,7 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group([ 'prefix' => 'token' ], function () {
 	Route::post('auth-attempt', 'EmployeeController@empshow');
 	Route::post('auth-once', 'AuthController@tokenAuthOnce');
 	Route::post('auth-login-using-id', 'AuthController@tokenAuthLoginUsingId');
@@ -26,10 +25,9 @@ Route::group([ 'prefix' => 'token' ], function () {
 
 	Route::group([ 'middleware' => 'auth:token' ], function () {
 		Route::post('auth-check', 'AuthController@tokenAuthCheck'); 
-		Route::post('auth-user', 'AuthController@tokenAuthUser');
-		Route::post('auth-id', 'AuthController@tokenAuthId');
-		Route::post('auth-login', 'AuthController@tokenAuthLogin');
-		Route::post('auth-logout', 'AuthController@tokenAuthLogout');
+		Route::post('ip-create', 'ExamController@createIPExam');
+		Route::post('ip-update', 'ExamController@ipUpdate');
+		Route::post('ip-delete', 'ExamController@ipdelete');
+		Route::post('ip-view', 'ExamController@ipview');
 	});
-});
 
