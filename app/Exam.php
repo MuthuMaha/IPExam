@@ -8,5 +8,5 @@ class Exam extends Model
 {
   protected $table='1_exam_admin_create_exam';
   protected $primaryKey='sl';
-  
+  public $timestamps=false;
 }
