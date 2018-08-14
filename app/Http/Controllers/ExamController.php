@@ -10,6 +10,7 @@ use App\Token;
 use App\User;
 use Illuminate\Http\Request;
 use App\Exam;
+use App\Http\Requests\ExamValidation;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\EmployeeCollection;
 use App\Http\Resources\ExamCollection;
@@ -19,7 +20,7 @@ class ExamController extends Controller
 {
    
   
-    public function createIPExam(Request $request)
+    public function createIPExam(ExamValidation $request)
     {
        $create=Ipexam::ipcreate($request);
        return $create;
