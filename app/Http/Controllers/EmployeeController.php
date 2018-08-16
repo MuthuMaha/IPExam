@@ -141,27 +141,15 @@ class EmployeeController extends Controller
                     'access_token' => Hash::make($str),
                 ]);
                 return [
-                       'success' => ['token'=>$token->access_token,'Message'=>$msg],
-                        'Role'=>$role,
-                        'EMP_ID'=>Auth::id(),
-                        'EMP_Name'=>Auth::user()->name,
-                        'CAMPUS_ID'=>'54',
-                        'SUBJECT'=>'MATHS',
-                        
-                        'EXAM'=>$exam,
+                       'success' => ['token'=>$token->access_token,'Message'=>'Login successfully'],
+                       
                     ];
          
             }
             
                return [
-                       'success' => ['token'=>$token,'Message'=>$msg],
-                        'Role'=>$role,
-                        'EMP_ID'=>Auth::id(),
-                        'EMP_Name'=>Auth::user()->name,
-                        'CAMPUS_ID'=>'54',
-                        'SUBJECT'=>'MATHS',
-                        
-                        'EXAM'=>$exam,
+                       'success' => ['token'=>$token,'Message'=>'Login successfully'],
+                       
                     ];
         }
         else{
