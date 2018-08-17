@@ -31,3 +31,12 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 		Route::post('ip-view', 'ExamController@ipview');
 	});
 
+
+//let these be here for somtime
+   Route::get('groups','BaseController@groups');
+   Route::get('class_years/{group_id}','BaseController@class_year_wrt_group');
+   Route::get('streams/{group_id}/{class_id}','BaseController@stream_wrt_group_class_year');
+   Route::get('programs/{stream_id}/{class_id}','BaseController@programs_wrt_stream_class_year');
+
+
+	
