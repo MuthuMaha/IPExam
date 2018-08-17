@@ -13,22 +13,22 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 	Route::post('auth-attempt', 'EmployeeController@empshow');
-	Route::post('auth-once', 'AuthController@tokenAuthOnce');
-	Route::post('auth-login-using-id', 'AuthController@tokenAuthLoginUsingId');
-	Route::post('auth-validate', 'AuthController@tokenAuthValidate');
-	Route::post('auth-image', 'AuthController@tokenAuthImage');
 
 	Route::group([ 'middleware' => 'auth:token' ], function () {
-		Route::post('auth-check', 'AuthController@tokenAuthCheck'); 
+		// Route::post('auth-check', 'AuthController@tokenAuthCheck'); 
 		Route::post('ip-create', 'ExamController@createIPExam');
-		Route::post('ip-update', 'ExamController@ipUpdate');
-		Route::post('ip-delete', 'ExamController@ipdelete');
-		Route::post('ip-view', 'ExamController@ipview');
+		Route::delete('ip-delete/{id}', 'ExamController@ipdelete');
+		Route::put('edit_exam/{id}', 'ExamController@editExam');
+		Route::get('edit_exam_details/{id}', 'ExamController@ipUpdate');
+		Route::post('edit_exam_details/{id}', 'ExamController@examdetailcreate');
+		Route::put('edit_exam_details/{id}/{e_id}', 'ExamController@ipeditexamdetails');
+		Route::delete('edit_exam_details/{id}/{e_id}', 'ExamController@deleteexamdetails');
+		// Route::post('ip-view', 'ExamController@ipview');
 	});
 
 
