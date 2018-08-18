@@ -25,6 +25,8 @@ use Illuminate\Http\Request;
 		Route::delete('ip-delete/{id}', 'ExamController@ipdelete');
 		Route::put('edit_exam/{id}', 'ExamController@editExam');
 		Route::get('edit_exam_details/{id}', 'ExamController@ipUpdate');
+		Route::post('bipc-mpc-marks', 'ExamController@bipc');
+		Route::post('result_upload', 'ExamController@mpc');
 		Route::post('edit_exam_details/{id}', 'ExamController@examdetailcreate');
 		Route::put('edit_exam_details/{id}/{e_id}', 'ExamController@ipeditexamdetails');
 		Route::delete('edit_exam_details/{id}/{e_id}', 'ExamController@deleteexamdetails');
