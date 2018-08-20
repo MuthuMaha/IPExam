@@ -25,11 +25,10 @@ class Resultupload extends FormRequest
     {
         return [
             'files'=>'required',
-            'Type'=>'required | string | min:3|max:255',
-            'CAMPUS_ID'=>'required | integer | min:1|max:255',
-            'EXAM_ID'=>'required | integer | min:1|max:255',
-            'STUD_ID'=>'required | integer | min:1|max:255',
-            'SUBJECT_ID'=>'required | integer | min:1|max:255',
+            'CAMPUS_ID'=>'required | integer ',
+            'EXAM_ID'=>'required | integer ',
+            'STUD_ID'=>'required | integer ',
+            'SUBJECT_ID'=>'required | integer',
         ];
     }
 

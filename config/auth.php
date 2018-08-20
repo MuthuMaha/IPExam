@@ -76,6 +76,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Employee::class,
         ],
+'t_student' => [
+            'driver' => 'eloquent',
+            'model' => App\Student::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -105,6 +109,11 @@ return [
         ],
  't_employee' => [
             'provider' => 't_employee',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+ 't_student' => [
+            'provider' => 't_student',
             'table' => 'password_resets',
             'expire' => 60,
         ],
