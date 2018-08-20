@@ -27,7 +27,7 @@ class BaseController extends Controller
     public function groups()
     {
         //
-        return new GroupCollection(groups::distinct('GROUP_ID')->orderBy('GROUP_ID')->get());
+        return new GroupCollection(groups::distinct('GROUP_ID')->orderBy('GROUP_ID')->paginate(10));
 
     }
 
@@ -40,7 +40,7 @@ class BaseController extends Controller
     {
         //
     
-        return new StudyClassCollection(class_year::whereIn('CLASS_ID',course_track::where('GROUP_ID',$id)->pluck('CLASS_ID'))->get());
+        return new StudyClassCollection(class_year::whereIn('CLASS_ID',course_track::where('GROUP_ID',$id)->pluck('CLASS_ID'))->paginate(10));
 
         
     
@@ -81,7 +81,7 @@ class BaseController extends Controller
         return new StreamCollection(Stream::whereIn('STREAM_ID',course_track::distinct('STREAM_ID')
                             ->where('STREAM', '<>','NULL')
                             ->where('GROUP_ID',$group_id)
-                            ->where('CLASS_ID',$class_id)->get())->get());
+                            ->where('CLASS_ID',$class_id)->get())->paginate(10));
          
     }
 
@@ -97,7 +97,7 @@ class BaseController extends Controller
         $stream_id= $request->stream_id;
         $class_id= $request->class_id;
         return new ProgramCollection(Program::where('STREAM_ID', '=',$stream_id)
-            ->where('CLASS_ID',$class_id)->get());
+            ->where('CLASS_ID',$class_id)->paginate(10));
 
     }
 
