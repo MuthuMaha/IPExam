@@ -15,4 +15,10 @@ class StudentController extends Controller
          return new ProfileResource(Student::profile($request->stud_id));
 
     }
+
+    public function written_tests(Request $request){
+
+    	return Student::written_tests();
+
+    }
 }

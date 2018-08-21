@@ -38,7 +38,10 @@ use Illuminate\Http\Request;
    Route::get('streams/{group_id}/{class_id}','BaseController@stream_wrt_group_class_year');
    Route::get('programs/{stream_id}/{class_id}','BaseController@programs_wrt_stream_class_year');
 
+
 //student Login Api's 
 Route::get('student/{stud_id}/profile','StudentController@profile_details');
+Route::get('student/{stud_id}/reports_card','StudentController@written_tests');
+
 
 	
