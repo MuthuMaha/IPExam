@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Employee;
 use App\Ipexam;
 use App\Campusupload;
+use App\Ipbpc;
+use App\Http\Requests\Resultupload;
 use App\Ipexamconductedfor;
 use App\Token;
 use App\User;
@@ -15,6 +17,7 @@ use App\Http\Requests\ExamValidation;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\EmployeeCollection;
 use App\Http\Resources\ExamCollection;
+use Illuminate\Database\Eloquent\Builder;
 use DB;
 use File;
 class ExamController extends Controller
@@ -61,6 +64,17 @@ class ExamController extends Controller
         $ip_exam=Ipexam::where('exam_id',$request->exam_id)->get();
         $ip_examcon=Ipexamconductedfor::where('exam_id',$request->exam_id)->get();
        return ['success'=>['Ip_exam'=>$ip_exam,'Ip_exam_conducted_for'=>$ip_examcon]];
+    }
+    public function bipc(Request $request){
+    $result_store=Campusupload::result_store($request);
+    return $result_store;
+    }
+    public function mpc(Resultupload $request){
+
+      $result=Ipbpc::result_upload($request);
+     return $result;
+
+
     }
    
 }

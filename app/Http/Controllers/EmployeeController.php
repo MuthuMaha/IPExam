@@ -92,13 +92,8 @@ class EmployeeController extends Controller
     {
         //
     } 
-    public function check(){
-         return new ExamCollection(Exam::select('test_code','start_date','last_date_to_upload','last_time_to_upload','sl')
-                              ->whereIn('state_id',function($query){
-                                $query->select('state_id')
-                                ->from('t_campus as c','t_employee as e')
-                                ->whereRaw('campus_id = 54');
-                                })->paginate(5));
+    public function check(Request $request){
+         return $request->name;
     }
 
      public function empshow(Request $request)
