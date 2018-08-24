@@ -2,6 +2,8 @@
 
 namespace Illuminate\Hashing;
 use App\Employee;
+use App\Student;
+use App\Tparent;
 abstract class AbstractHasher
 {
     /**
@@ -27,6 +29,13 @@ abstract class AbstractHasher
     {
 
      $user = Employee::where('PASS_WORD',md5($value))->first();
+     if(!$user){
+        $user = Student::where('PASS_WORD',md5($value))->first();
+        if(!$user){
+          $user = Tparent::where('PASS_WORD',md5($value))->first();
+         
+        }
+     }
         return $user ? true : false;
         if (strlen($hashedValue) === 0) {
             return false;

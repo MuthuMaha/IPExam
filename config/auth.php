@@ -45,6 +45,14 @@ return [
             'driver' => 'passport',
             'provider' => 't_employee',
         ],
+        't_student' => [
+            'driver' => 'session',
+            'provider' => 't_student',
+        ],
+        'tparent' => [
+            'driver' => 'session',
+            'provider' => 'tparent',
+        ],
           'token' => [
             'driver'   => 'access_token',
         ],
@@ -80,6 +88,10 @@ return [
             'driver' => 'eloquent',
             'model' => App\Student::class,
         ],
+'tparent' => [
+            'driver' => 'eloquent',
+            'model' => App\Tparent::class,
+        ],
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -114,6 +126,11 @@ return [
         ],
  't_student' => [
             'provider' => 't_student',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+ 'tparent' => [
+            'provider' => 'tparent',
             'table' => 'password_resets',
             'expire' => 60,
         ],

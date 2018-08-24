@@ -20,18 +20,23 @@ use Illuminate\Http\Request;
 	Route::post('auth-attempt', 'EmployeeController@empshow');
 
 	Route::group([ 'middleware' => 'auth:token' ], function () {
-		// Route::post('auth-check', 'AuthController@tokenAuthCheck'); 
+		Route::post('auth-check', 'EmployeeController@check');  
 		Route::post('ip-create', 'ExamController@createIPExam');
 		Route::delete('ip-delete/{id}', 'ExamController@ipdelete');
 		Route::put('edit_exam/{id}', 'ExamController@editExam');
 		Route::get('edit_exam_details/{id}', 'ExamController@ipUpdate');
 		Route::post('bipc-mpc-marks', 'ExamController@bipc');
+		Route::put('bipc-mpc-marks', 'ExamController@bipcedit');
+		Route::delete('bipc-mpc-marks', 'ExamController@bipcdelete');
 		Route::post('result_upload', 'ExamController@mpc');
 		Route::post('edit_exam_details/{id}', 'ExamController@examdetailcreate');
 		Route::put('edit_exam_details/{id}/{e_id}', 'ExamController@ipeditexamdetails');
 		Route::delete('edit_exam_details/{id}/{e_id}', 'ExamController@deleteexamdetails');
 		// Route::post('ip-view', 'ExamController@ipview');
+		Route::delete('deleteresultimages','ExamController@deleteresult');
+		Route::get('resultimagesview','ExamController@resultimagesview');
 	});
+
 
 
 //let these be here for somtime

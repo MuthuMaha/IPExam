@@ -7,6 +7,7 @@ use App\Employee;
 use App\Ipexam;
 use App\Campusupload;
 use App\Ipbpc;
+use App\Ipmpc;
 use App\Http\Requests\Resultupload;
 use App\Ipexamconductedfor;
 use App\Token;
@@ -60,13 +61,21 @@ class ExamController extends Controller
       return ['success'=>['Message'=>'Not Deleted because of some upload']];
 
     }
-    public function ipview(Request $request){
-        $ip_exam=Ipexam::where('exam_id',$request->exam_id)->get();
-        $ip_examcon=Ipexamconductedfor::where('exam_id',$request->exam_id)->get();
-       return ['success'=>['Ip_exam'=>$ip_exam,'Ip_exam_conducted_for'=>$ip_examcon]];
-    }
+    // public function ipview(Request $request){
+    //     $ip_exam=Ipexam::where('exam_id',$request->exam_id)->get();
+    //     $ip_examcon=Ipexamconductedfor::where('exam_id',$request->exam_id)->get();
+    //    return ['success'=>['Ip_exam'=>$ip_exam,'Ip_exam_conducted_for'=>$ip_examcon]];
+    // }
     public function bipc(Request $request){
     $result_store=Campusupload::result_store($request);
+    return $result_store;
+    }
+    public function bipcedit(Request $request){
+    $result_store=Campusupload::result_store($request);
+    return $result_store;
+    }
+    public function bipcdelete(Request $request){
+    $result_store=Campusupload::result_delete($request);
     return $result_store;
     }
     public function mpc(Resultupload $request){
@@ -75,6 +84,16 @@ class ExamController extends Controller
      return $result;
 
 
+    }
+    public function resultimagesview(Request $request){
+      $result=Ipmpc::resultview($request);
+
+      return $result;
+    }
+    public function deleteresult(Request $request){
+      $result=Ipmpc::deleteresult($request);
+
+      return $result;
     }
    
 }
