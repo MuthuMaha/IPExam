@@ -18,6 +18,9 @@ class Ipmpc extends Model
         ->select('b.GROUP_NAME')
         ->where('a.exam_id',$data->EXAM_ID)
         ->get();
+        if(!count($check)){
+          return "EXAM_ID WRONG";
+        }
     if ($check[0]->GROUP_NAME='M.P.C')
     {
       $path=public_path().'/Result_sheet/MPC/'.$data->CAMPUS_ID.'/'.$data->EXAM_ID.'/'.$data->STUD_ID.'/'.$data->SUBJECT_ID;
@@ -59,5 +62,28 @@ class Ipmpc extends Model
                  ];
         return $result;
           
+    }
+    public static function markDetails($data){
+       $check=DB::table('IP_Exam_Conducted_For as a')
+        ->join('t_course_group as b', 'a.group_id', '=', 'b.GROUP_ID')
+        ->select('b.GROUP_NAME')
+        ->where('a.exam_id',$data->EXAM_ID)
+        ->get();
+        $table='IP_'.str_replace(".","",$check[0]->GROUP_NAME).'_Marks';
+        $detail=DB::table($table)->where(['CAMPUS_ID'=>$data->CAMPUS_ID,'STUD_ID'=>$data->STUD_ID,'exam_id'=>$data->EXAM_ID]
+      )->get();
+        $test_type_id=DB::table('IP_Exam_Details')->select('Test_type_id')->where('exam_id',$data->EXAM_ID)->get();
+        $max_pass=DB::table('IP_Test_Max_Marks')->where('test_type_id',$test_type_id[0]->Test_type_id)->get();
+        $subjects=DB::table('0_subjects')->get();
+        
+        return [
+                    'Login' => [
+                        'response_message'=>"success",
+                        'response_code'=>"1",
+                        ],
+                        'Exam_details'=>$detail,
+                        'Max_Pass_Marks'=>$max_pass,
+                        'Subjects'=>$subjects,
+                 ];
     }
 }

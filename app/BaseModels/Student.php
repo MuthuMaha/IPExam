@@ -1,12 +1,16 @@
 <?php
 
 namespace App\BaseModels;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\DB;
+use App\Token;
 
-class Student extends Model
+class Student extends Authenticatable
 {
     //
+    
+    use Notifiable;
     protected $table = 't_student';
     protected $primaryKey = 'ADM_NO';
     private static $test_types=[];
@@ -19,6 +23,10 @@ class Student extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
+
+     public function tokens() {
+        return $this->hasMany(Token::class, 'user_id', 'ADM_NO');
+    }
     public function stream()
     {
         return $this->hasOne('App\BaseModels\Stream','STREAM_ID','STREAM_ID');

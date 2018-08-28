@@ -17,6 +17,6 @@ class Token extends Model
 		return $this->belongsTo(Student::class, 'user_id', 'ADM_NO');
 	}
 	public function parent () {
-		return $this->belongsTo(Tparent::class, 'user_id', 'MOBILE_NO');
+		return $this->belongsTo(Tparent::class, 'user_id', 'ADM_NO');
 	}
 }

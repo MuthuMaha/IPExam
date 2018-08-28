@@ -3,7 +3,7 @@ namespace App\Extensions;
 
 use App\Token;
 use App\User;
-use App\Student;
+use App\BaseModels\Student;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;

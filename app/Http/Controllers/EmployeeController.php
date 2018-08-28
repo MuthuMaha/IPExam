@@ -5,7 +5,7 @@ use Auth;
 use Carbon\Carbon;
 use App\Employee;
 use App\Parent_details;
-use App\Student;
+use App\BaseModels\Student;
 use App\Tparent;
 use App\Token;
 use App\User;
@@ -120,9 +120,9 @@ class EmployeeController extends Controller
         }
         if($request->user_type=="parent")
         {
-        Auth::guard('tparent')->attempt([ 'MOBILE_NO' => $request->get('MOBILE_NO'), 'password' => $request->get('PASS_WORD') ]);
+        Auth::guard('tparent')->attempt([ 'ADM_NO' => $request->get('ADM_NO'), 'password' => $request->get('PASS_WORD') ]);
         }
-        if(Auth::id() || Auth::guard('t_student')->id()|| Auth::guard('tparent')->id()){
+      if(Auth::id() || Auth::guard('t_student')->id()|| Auth::guard('tparent')->id()){
             // here im getting the campus_id
             $campus_id="54";
             // Here Im getting the role for this particular ID
@@ -239,14 +239,14 @@ class EmployeeController extends Controller
                             'response_code'=>"1",
                             ],
                         'Token'=>$token[0],
-                        'Students'=>Auth::guard('tparent')->user()->ADM_NO, 
+                        // 'Students'=>Auth::guard('tparent')->user()->ADM_NO, 
                     ];
         }
         else{
                 return [
                         'Login' => [
                             'response_message'=>"error",
-                            'response_code'=>"0",
+                            // 'response_code'=>Auth::guard('tparent')->user()->ADM_NO,
                             ],
                     ];
         }

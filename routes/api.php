@@ -12,29 +12,46 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 	Route::post('auth-attempt', 'EmployeeController@empshow');
 
 	Route::group([ 'middleware' => 'auth:token' ], function () {
-		Route::post('auth-check', 'EmployeeController@check');  
+
+		//BIPC_MPC
+
+		Route::get('bipc_mpc_pic', 'ExamController@markDetails');
+		Route::post('bipc-mpc-marks', 'ExamController@bipc');
+		Route::put('bipc-mpc-marks', 'ExamController@bipcedit');
+		Route::delete('bipc-mpc-marks', 'ExamController@bipcdelete');
+
+		//IP Exam CRUD
+		// Route::post('auth-check', 'EmployeeController@check');  
 		Route::post('ip-create', 'ExamController@createIPExam');
 		Route::delete('ip-delete/{id}', 'ExamController@ipdelete');
 		Route::put('edit_exam/{id}', 'ExamController@editExam');
 		Route::get('edit_exam_details/{id}', 'ExamController@ipUpdate');
-		Route::post('bipc-mpc-marks', 'ExamController@bipc');
-		Route::put('bipc-mpc-marks', 'ExamController@bipcedit');
-		Route::delete('bipc-mpc-marks', 'ExamController@bipcdelete');
-		Route::post('result_upload', 'ExamController@mpc');
 		Route::post('edit_exam_details/{id}', 'ExamController@examdetailcreate');
 		Route::put('edit_exam_details/{id}/{e_id}', 'ExamController@ipeditexamdetails');
 		Route::delete('edit_exam_details/{id}/{e_id}', 'ExamController@deleteexamdetails');
+
+		//Result Image CRUD
 		// Route::post('ip-view', 'ExamController@ipview');
+		Route::post('result_upload', 'ExamController@mpc');
 		Route::delete('deleteresultimages','ExamController@deleteresult');
 		Route::get('resultimagesview','ExamController@resultimagesview');
+
+		//Query API
+
+		Route::post('rise_query', 'ExamController@queryRise');
+		Route::get('rise_query', 'ExamController@getqueryRise');
+		Route::put('rise_query', 'ExamController@updatequery');
+		Route::delete('rise_query', 'ExamController@deleteQuery');
+
+		//Response API
+
+		Route::post('query_response', 'ExamController@queryResponse');
+		Route::get('query_response', 'ExamController@getqueryResponse');
+		Route::put('query_response', 'ExamController@updatequeryResponse');
+		Route::delete('query_response', 'ExamController@deleteResponse');
 	});
 
 

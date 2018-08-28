@@ -5,7 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
  use App\Token;
-class Tparent extends Authenticatable
+class Student extends Authenticatable
 {
     use Notifiable;
      protected $table='t_student';

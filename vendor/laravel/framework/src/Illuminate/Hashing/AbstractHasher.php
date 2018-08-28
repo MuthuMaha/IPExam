@@ -2,7 +2,7 @@
 
 namespace Illuminate\Hashing;
 use App\Employee;
-use App\Student;
+use App\BaseModels\Student;
 use App\Tparent;
 abstract class AbstractHasher
 {

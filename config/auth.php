@@ -86,7 +86,7 @@ return [
         ],
 't_student' => [
             'driver' => 'eloquent',
-            'model' => App\Student::class,
+            'model' => App\BaseModels\Student::class,
         ],
 'tparent' => [
             'driver' => 'eloquent',

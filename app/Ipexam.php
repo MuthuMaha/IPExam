@@ -3,10 +3,10 @@
 namespace App;
 use Auth;
 use DB;
-use App\Group;
-use App\Classyear;
-use App\Tprogram;
-use App\Stream;
+use App\BaseModels\Group;
+use App\BaseModels\StudyClass as Classyear;
+use App\BaseModels\Program as Tprogram;
+use App\BaseModels\Stream;
 use Illuminate\Database\Eloquent\Model;
 
 class Ipexam extends Model
@@ -16,6 +16,18 @@ class Ipexam extends Model
    protected $fillable=['Exam_name', 'Date_exam', 'Test_type_id', 'Board', 'created_by', 'updated_by',];
 
    public static function ipcreate($data){
+    if(Auth::id()){
+    $user=Auth::id();
+     }
+     elseif(Auth::guard('t_student')->id()){
+       $user=Auth::guard('t_student')->id();
+     }
+     elseif(Auth::guard('tparent')->id()){
+      $user=Auth::guard('tparent')->id();
+     }
+     else{
+      $user="";
+     }
      $a=array();
      $gi=explode(',',$data->Group_Id);
      $ci=explode(',',$data->Classyear_Id);
@@ -40,7 +52,7 @@ class Ipexam extends Model
                     'Date_exam'=>$data->Date_Exam,
                     'Test_type_id'=>$data->Test_Type_Id,
                     'Board'=>$data->Board,
-                    'created_by'=>Auth::User()->USER_NAME,
+                    'created_by'=>$user,
                     'updated_by'=>"",
                 ]);
      for($j=0;$j<=$x-1;$j++){
@@ -137,8 +149,20 @@ class Ipexam extends Model
                     ];
    }
    public static function editExam($data){
+      if(Auth::id()){
+    $user=Auth::id();
+     }
+     elseif(Auth::guard('t_student')->id()){
+       $user=Auth::guard('t_student')->id();
+     }
+     elseif(Auth::guard('tparent')->id()){
+      $user=Auth::guard('tparent')->id();
+     }
+     else{
+      $user="";
+     }
      $examdetailcreate=Ipexam::where('exam_id',$data->route('id'))
-     ->update(['Exam_name'=>$data->Exam_name,'Date_exam'=>$data->Date_exam,'Test_type_id'=>$data->Test_Type_Id,'Board'=>$data->Board,'updated_by'=>Auth::user()->USER_NAME]);
+     ->update(['Exam_name'=>$data->Exam_name,'Date_exam'=>$data->Date_exam,'Test_type_id'=>$data->Test_Type_Id,'Board'=>$data->Board,'updated_by'=>$user]);
      return [
                         'Login' => [
                             'response_message'=>"success",
