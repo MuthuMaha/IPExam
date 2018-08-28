@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 |
 | Here is where you can register API routes for your application. These
 | routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
+| is assigned the "api" middleware group. Enjoy building your API!muthu
 |
 */
 	Route::post('auth-attempt', 'EmployeeController@empshow');
@@ -52,7 +52,7 @@ use Illuminate\Http\Request;
 		Route::get('query_response', 'ExamController@getqueryResponse');
 		Route::put('query_response', 'ExamController@updatequeryResponse');
 		Route::delete('query_response', 'ExamController@deleteResponse');
-		
+
 		//let these be here for somtime
 		Route::get('groups','BaseController@groups');
 		Route::get('class_years/{group_id}','BaseController@class_year_wrt_group');
