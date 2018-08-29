@@ -7,6 +7,9 @@ use App\Employee;
 use App\Ipexam;
 use App\Campusupload;
 use App\Ipbpc;
+use App\Ipmpc;
+use App\Query;
+use App\Response;
 use App\Http\Requests\Resultupload;
 use App\Ipexamconductedfor;
 use App\Token;
@@ -27,6 +30,41 @@ class ExamController extends Controller
     public function createIPExam(ExamValidation $request)
     {
        $create=Ipexam::ipcreate($request);
+       return $create;
+    } 
+    public function queryRise(Request $request)
+    {
+       $create=Query::queryRise($request);
+       return $create;
+    }
+    public function getqueryRise(Request $request)
+    {
+       $create=Query::getqueryRise($request);
+       return $create;
+    }
+    public function updatequery(Request $request)
+    {
+       $create=Query::updatequery($request);
+       return $create;
+    }
+    public function deleteQuery(Request $request)
+    {
+       $create=Query::where('query_id',$request->query_id)->delete();
+       return $create;
+    }
+    public function deleteResponse(Request $request)
+    {
+       $create=Response::where('response_id',$request->response_id)->delete();
+       return $create;
+    }
+    public function queryResponse(Request $request)
+    {
+       $create=Response::queryResponse($request);
+       return $create;
+    }
+    public function updatequeryResponse(Request $request)
+    {
+       $create=Response::updatequeryResponse($request);
        return $create;
     }
     public function ipUpdate(Request $request){
@@ -60,13 +98,21 @@ class ExamController extends Controller
       return ['success'=>['Message'=>'Not Deleted because of some upload']];
 
     }
-    public function ipview(Request $request){
-        $ip_exam=Ipexam::where('exam_id',$request->exam_id)->get();
-        $ip_examcon=Ipexamconductedfor::where('exam_id',$request->exam_id)->get();
-       return ['success'=>['Ip_exam'=>$ip_exam,'Ip_exam_conducted_for'=>$ip_examcon]];
-    }
+    // public function ipview(Request $request){
+    //     $ip_exam=Ipexam::where('exam_id',$request->exam_id)->get();
+    //     $ip_examcon=Ipexamconductedfor::where('exam_id',$request->exam_id)->get();
+    //    return ['success'=>['Ip_exam'=>$ip_exam,'Ip_exam_conducted_for'=>$ip_examcon]];
+    // }
     public function bipc(Request $request){
     $result_store=Campusupload::result_store($request);
+    return $result_store;
+    }
+    public function bipcedit(Request $request){
+    $result_store=Campusupload::result_store($request);
+    return $result_store;
+    }
+    public function bipcdelete(Request $request){
+    $result_store=Campusupload::result_delete($request);
     return $result_store;
     }
     public function mpc(Resultupload $request){
@@ -75,6 +121,21 @@ class ExamController extends Controller
      return $result;
 
 
+    }
+    public function resultimagesview(Request $request){
+      $result=Ipmpc::resultview($request);
+
+      return $result;
+    }
+    public function deleteresult(Request $request){
+      $result=Ipmpc::deleteresult($request);
+
+      return $result;
+    }
+    public function markDetails(Request $request){
+      $result=Ipmpc::markDetails($request);
+
+      return $result;
     }
    
 }

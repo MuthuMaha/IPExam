@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use Auth;
 use Carbon\Carbon;
 use App\Employee;
+use App\Parent_details;
+use App\BaseModels\Student;
+use App\Tparent;
 use App\Token;
 use App\User;
 use Illuminate\Http\Request;
@@ -92,37 +95,48 @@ class EmployeeController extends Controller
     {
         //
     } 
+
     public function check(Request $request){
-         return $request->name;
+
+       if (Auth::check())
+{
+    $id = Auth::user()->SURNAME;
+
+}
+         return $id;
     }
 
      public function empshow(Request $request)
     {
            
         $msg="This is old token";
+        if($request->user_type=="employee")
+        {
         Auth::attempt([ 'PAYROLL_ID' => $request->get('PAYROLL_ID'), 'password' => $request->get('PASS_WORD') ]);
-        if(Auth::id()){
+        }
+        if($request->user_type=="student")
+        {
+        Auth::guard('t_student')->attempt([ 'ADM_NO' => $request->get('ADM_NO'), 'password' => $request->get('PASS_WORD') ]);
+        }
+        if($request->user_type=="parent")
+        {
+        Auth::guard('tparent')->attempt([ 'ADM_NO' => $request->get('ADM_NO'), 'password' => $request->get('PASS_WORD') ]);
+        }
+      if(Auth::id() || Auth::guard('t_student')->id()|| Auth::guard('tparent')->id()){
             // here im getting the campus_id
             $campus_id="54";
             // Here Im getting the role for this particular ID
             // $role = DB::select('SELECT roles.role FROM `roles` INNER Join user_roles on roles.roll_id=user_roles.ROLL_ID inner join users on users.payroll_id=user_roles.payroll_id WHERE users.id="'.Auth::id().'"');
             // $role="";
+                       $exam=DB::select('select ea.test_code,ea.start_date,ea.last_date_to_upload,ea.last_time_to_upload,ea.sl from 1_exam_admin_create_exam as ea where  ea.STATE_ID in (select c.state_id from t_employee as e,t_campus as c where c.campus_id=e.campus_id and c.campus_id="54")');
+            if(Auth::id()){
             $role=DB::table('roles')
                   ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
                   ->join('employees','employees.payroll_id','=','user_roles.payroll_id')
                   ->where('employees.id','=',Auth::id())
                   ->select('roles.role')
                   ->get();
-
-                       // fetching exam details of logged in branch from t_
-                       $exam=DB::select('select ea.test_code,ea.start_date,ea.last_date_to_upload,ea.last_time_to_upload,ea.sl from 1_exam_admin_create_exam as ea where  ea.STATE_ID in (select c.state_id from t_employee as e,t_campus as c where c.campus_id=e.campus_id and c.campus_id="54")');
-                       // $exam= "";
-                       // $exam=DB::table('1_exam_admin_create_exam as ea','t_employee as e','t_campus as c')
-                                
-            // fetching the token for particular ID
-
             $token=Token::whereUser_id(Auth::id())->pluck('access_token');
-            // Here Im getting the user data
             $client = Employee::find(Auth::id());
             $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
            if($uc){
@@ -135,22 +149,106 @@ class EmployeeController extends Controller
                     'expiry_time'=>'1',
                     'access_token' => Hash::make($str),
                 ]);
-                return [
-                       'success' => ['token'=>$token->access_token,'Message'=>'Login successfully'],
-                       
+                    return [
+                        'Login' => [
+                            'response_message'=>"success",
+                            'response_code'=>"1",
+                            ],
+                            'Token'=>$token->access_token,
                     ];
          
             }
+        }
+                  elseif(Auth::guard('t_student')->id()){
+                       $role=DB::table('roles')
+                  
+                  ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
+                  ->join('employees','employees.payroll_id','=','user_roles.payroll_id')
+                  ->where('employees.id','=',Auth::guard('t_student')->id())
+                  ->select('roles.role')
+                  ->get();
+                   $token=Token::whereUser_id(Auth::guard('t_student')->id())->pluck('access_token');
+                    $client = Student::find(Auth::guard('t_student')->id());
+            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
+              if($uc){
+             $msg='Token expired and New Token generated';
+           }
+            if (!$token->count()) {
+                $str=str_random(10);
+                $token=Token::create([
+                    'user_id'=>Auth::guard('t_student')->id(),
+                    'expiry_time'=>'1',
+                    'access_token' => Hash::make($str),
+                ]);
+             
+                    return [
+                        'Login' => [
+                            'response_message'=>"success",
+                            'response_code'=>"1",
+                            ],
+                            'Token'=>$token->access_token,
+                    ];
+         
+            }
+           }
+           else{
+            $student=Parent_details::where('id',Auth::guard('tparent')->id());
+                         $role=DB::table('roles')
+                  
+                  ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
+                  ->join('employees','employees.payroll_id','=','user_roles.payroll_id')
+                  ->where('employees.id','=',Auth::guard('tparent')->id())
+                  ->select('roles.role')
+                  ->get();
+                   $token=Token::whereUser_id(Auth::guard('tparent')->id())->pluck('access_token');
+                    $client = Tparent::find(Auth::guard('tparent')->id());
+            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
+              if($uc){
+             $msg='Token expired and New Token generated';
+           }
+            if (!$token->count()) {
+                $str=str_random(10);
+                $token=Token::create([
+                    'user_id'=>Auth::guard('tparent')->id(),
+                    'expiry_time'=>'1',
+                    'access_token' => Hash::make($str),
+                ]);
+                    return [
+                        'Login' => [
+                            'response_message'=>"success",
+                            'response_code'=>"1",
+                            ],
+                            'Token'=>$token->access_token,
+                          
+                    ];
+         
+            }
+           }
+                       // fetching exam details of logged in branch from t_
+                       // $exam= "";
+                       // $exam=DB::table('1_exam_admin_create_exam as ea','t_employee as e','t_campus as c')
+                                
+            // fetching the token for particular ID
+
+            // Here Im getting the user data
             
-               return [
-                       'success' => ['token'=>$token,'Message'=>'Login successfully'],
-                       
+            
+                    return [
+                        'Login' => [
+                            'response_message'=>"success",
+                            'response_code'=>"1",
+                            ],
+                        'Token'=>$token[0],
+                        // 'Students'=>Auth::guard('tparent')->user()->ADM_NO, 
                     ];
         }
         else{
-            return [
-                    'error' => ['message'=>'email or password incorrect'],
-                ];
+                return [
+                        'Login' => [
+                            'response_message'=>"error",
+                            // 'response_code'=>Auth::guard('tparent')->user()->ADM_NO,
+                            ],
+                    ];
         }
         
     }

@@ -59,7 +59,7 @@ $product ="";
                   ->where('PASS_WORD',md5($request->PASS_WORD))
                   ->first();
         if($request->usertype=="student")
-            $user = \App\Student::where('ADM_NO', $request->PAYROLL_ID)
+            $user = \App\BaseModels\Student::where('ADM_NO', $request->PAYROLL_ID)
                   // ->where('PASS_WORD',md5($request->PASS_WORD))
                   ->first();
         // $token=Token::create([
