@@ -20,7 +20,13 @@ class Response extends Model
    		'response_text'=>$data->Response_Text,
    		'response_by'=>Auth::user()->PAYROLL_ID
    	]);
-   	return $qdata;
+   	   return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Message'=>'Response Created Successfully',
+            ];
 
    }
 
@@ -34,11 +40,17 @@ class Response extends Model
    }
    public static function updatequeryResponse($data){
 
-   	$qdata=Response::where('response_id',$data->response_id)->update([
-   		'query_id'=>$data->query_id,
-   		'response_text'=>$data->response_text
+   	$qdata=Response::where('response_id',$data->Response_Id)->update([
+   		'query_id'=>$data->Query_Id,
+   		'response_text'=>$data->Response_Text
    	]);
-   	return $qdata;
+      return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Message'=>'Response Updated Successfully',
+            ];
 
    }
 

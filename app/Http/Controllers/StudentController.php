@@ -18,7 +18,11 @@ class StudentController extends Controller
 
     public function written_tests(Request $request){
 
+<<<<<<< HEAD
     	return Student::written_tests($request->stud_id);
+=======
+    	return Student::written_tests($request);
+>>>>>>> 1be52987cc988fe23f339ff42f266975cc6b1306
 
     }
 }

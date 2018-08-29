@@ -112,30 +112,40 @@ class EmployeeController extends Controller
         $msg="This is old token";
         if($request->user_type=="employee")
         {
-        Auth::attempt([ 'PAYROLL_ID' => $request->get('PAYROLL_ID'), 'password' => $request->get('PASS_WORD') ]);
+        Auth::attempt([ 'PAYROLL_ID' => $request->get('USERNAME'), 'password' => $request->get('PASS_WORD') ]);
         }
         if($request->user_type=="student")
         {
-        Auth::guard('t_student')->attempt([ 'ADM_NO' => $request->get('ADM_NO'), 'password' => $request->get('PASS_WORD') ]);
+        Auth::guard('t_student')->attempt([ 'ADM_NO' => $request->get('USERNAME'), 'password' => $request->get('PASS_WORD') ]);
         }
         if($request->user_type=="parent")
         {
-        Auth::guard('tparent')->attempt([ 'ADM_NO' => $request->get('ADM_NO'), 'password' => $request->get('PASS_WORD') ]);
+        Auth::guard('tparent')->attempt([ 'ADM_NO' => $request->get('USERNAME'), 'password' => $request->get('PASS_WORD') ]);
         }
       if(Auth::id() || Auth::guard('t_student')->id()|| Auth::guard('tparent')->id()){
+         $c=array();
             // here im getting the campus_id
             $campus_id="54";
             // Here Im getting the role for this particular ID
-            // $role = DB::select('SELECT roles.role FROM `roles` INNER Join user_roles on roles.roll_id=user_roles.ROLL_ID inner join users on users.payroll_id=user_roles.payroll_id WHERE users.id="'.Auth::id().'"');
-            // $role="";
                        $exam=DB::select('select ea.test_code,ea.start_date,ea.last_date_to_upload,ea.last_time_to_upload,ea.sl from 1_exam_admin_create_exam as ea where  ea.STATE_ID in (select c.state_id from t_employee as e,t_campus as c where c.campus_id=e.campus_id and c.campus_id="54")');
             if(Auth::id()){
+                $details=[
+                    'NAME'=>Auth::user()->USER_NAME,
+                    'USER'=>'EMPLOYEE',
+                    'YEAR'=>Auth::user()->DESIGNATION
+                          ];
             $role=DB::table('roles')
                   ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
-                  ->join('employees','employees.payroll_id','=','user_roles.payroll_id')
-                  ->where('employees.id','=',Auth::id())
+                  ->join('t_employee','t_employee.payroll_id','=','user_roles.payroll_id')
+                  ->where('t_employee.EMPLOYEE_ID','=',Auth::id())
                   ->select('roles.role')
                   ->get();
+                     
+            // Here Im getting the user data
+            foreach ($role as $key => $value) {
+               $c[]=$value->role;
+            }
+            
             $token=Token::whereUser_id(Auth::id())->pluck('access_token');
             $client = Employee::find(Auth::id());
             $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
@@ -155,11 +165,18 @@ class EmployeeController extends Controller
                             'response_code'=>"1",
                             ],
                             'Token'=>$token->access_token,
+                            'Role'=>$c,
+                            'Details'=>$details
                     ];
          
             }
         }
                   elseif(Auth::guard('t_student')->id()){
+                $details=[
+                    'NAME'=>Auth::guard('t_student')->user()->NAME,
+                    'USER'=>'STUDENT',
+                    'ACADEMIC_YEAR'=>Auth::guard('t_student')->user()->ACADEMIC_YEAR
+                          ];
                        $role=DB::table('roles')
                   
                   ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
@@ -187,14 +204,20 @@ class EmployeeController extends Controller
                             'response_code'=>"1",
                             ],
                             'Token'=>$token->access_token,
+                            'Details'=>$details
                     ];
          
             }
            }
            else{
-            $student=Parent_details::where('id',Auth::guard('tparent')->id());
-                         $role=DB::table('roles')
-                  
+               
+            $student=Parent_details::where('ADM_NO',Auth::guard('tparent')->id())->get();
+             $details=[
+                    'NAME'=>$student[0]->PARENT_NAME,
+                    'USER'=>'PARENT',
+                    'PARENT OF'=>Auth::guard('tparent')->user()->NAME
+                          ];
+                $role=DB::table('roles')                  
                   ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
                   ->join('employees','employees.payroll_id','=','user_roles.payroll_id')
                   ->where('employees.id','=',Auth::guard('tparent')->id())
@@ -219,6 +242,7 @@ class EmployeeController extends Controller
                             'response_code'=>"1",
                             ],
                             'Token'=>$token->access_token,
+                            'Details'=>$details
                           
                     ];
          
@@ -229,16 +253,25 @@ class EmployeeController extends Controller
                        // $exam=DB::table('1_exam_admin_create_exam as ea','t_employee as e','t_campus as c')
                                 
             // fetching the token for particular ID
-
-            // Here Im getting the user data
-            
-            
+           if(Auth::id())
                     return [
                         'Login' => [
                             'response_message'=>"success",
                             'response_code'=>"1",
                             ],
                         'Token'=>$token[0],
+                        'Role'=>$c,
+                        'Details'=>$details
+                        // 'Students'=>Auth::guard('tparent')->user()->ADM_NO, 
+                    ];
+                    else
+                         return [
+                        'Login' => [
+                            'response_message'=>"success",
+                            'response_code'=>"1",
+                            ],
+                        'Token'=>$token[0],
+                        'Details'=>$details
                         // 'Students'=>Auth::guard('tparent')->user()->ADM_NO, 
                     ];
         }
@@ -246,8 +279,8 @@ class EmployeeController extends Controller
                 return [
                         'Login' => [
                             'response_message'=>"error",
-                            // 'response_code'=>Auth::guard('tparent')->user()->ADM_NO,
-                            ],
+                            'response_code'=>"0"
+                           ],
                     ];
         }
         
