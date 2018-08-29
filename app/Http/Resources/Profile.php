@@ -23,6 +23,7 @@ class Profile extends JsonResource
             'program' => $this[0]->program->PROGRAM_NAME,
             'campus' => $this[0]->campus->CAMPUS_NAME,
             'section' => $this[0]->section == '' ? null : $this[0]->section->section_name,
+            'parent' => $this[0]->parent == '' ? null : $this[0]->parent->PARENT_NAME,
         ];
     }
 }

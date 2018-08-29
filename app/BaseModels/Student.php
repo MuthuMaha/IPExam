@@ -15,6 +15,10 @@ class Student extends Model
     {
         return $this->hasOne('App\BaseModels\Program','PROGRAM_ID', 'PROGRAM_ID');
     }
+     public function parent()
+    {
+        return $this->hasOne('App\BaseModels\Parents','ADM_NO', 'ADM_NO');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -44,7 +48,7 @@ class Student extends Model
 
     public static function profile($stud_id){
 
-    	return static::where('ADM_NO','=',$stud_id)->with('program','stream','class_year','campus','section')->get();
+    	return static::where('ADM_NO','=',$stud_id)->with('program','stream','class_year','campus','section','parent')->get();
 
     }
 
@@ -55,9 +59,9 @@ class Student extends Model
 
         foreach($test_types as $value){
             // $query[]=$value->test_type_name;
-		  $query[$value->test_type_name]=DB::select("select ipd.Exam_name,ipd.Exam_id,ipd.Test_type_id,ecf.group_id,ecf.stream_id,ecf.classyear_id,ecf.program_id from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from t_student t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id WHERE t.adm_no='".$stud_id."') ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$value->test_type_id."'"
+		  $query[$value->test_type_name] = DB::select("select ipd.Exam_name,ipd.Exam_id,ipd.Test_type_id,ecf.group_id,ecf.stream_id,ecf.classyear_id,ecf.program_id from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from t_student t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id WHERE t.adm_no='".$stud_id."') ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$value->test_type_id."'"
 		            );   
-}
+		}
         return $query;
 
     }
