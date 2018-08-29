@@ -70,7 +70,7 @@ class Ipmpc extends Model
         ->where('a.exam_id',$data->EXAM_ID)
         ->get();
         $table='IP_'.str_replace(".","",$check[0]->GROUP_NAME).'_Marks';
-        $detail=DB::table($table)->where(['CAMPUS_ID'=>$data->CAMPUS_ID,'STUD_ID'=>$data->STUD_ID,'exam_id'=>$data->EXAM_ID]
+        $detail=DB::table($table)->select('PHYSICS','CHEMISTRY','MATHEMATICS','TOTAL','ENGLISH','GK','SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK','MATHEMATICS_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where(['CAMPUS_ID'=>$data->CAMPUS_ID,'STUD_ID'=>$data->STUD_ID,'exam_id'=>$data->EXAM_ID]
       )->get();
         $test_type_id=DB::table('IP_Exam_Details')->select('Test_type_id')->where('exam_id',$data->EXAM_ID)->get();
         $max_pass=DB::table('IP_Test_Max_Marks')->where('test_type_id',$test_type_id[0]->Test_type_id)->get();

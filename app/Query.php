@@ -24,7 +24,13 @@ class Query extends Model
    		'pointed_to'=>$data->Pointed_To,
 
    	]);
-   	return $qdata;
+     return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Message'=>'Query Created Successfully',
+            ];
 
    }
    public static function getqueryRise($data){
@@ -34,7 +40,13 @@ class Query extends Model
    		'stud_id'=>Auth::user()->ADM_NO,
 
    	])->get();
-   	return $qdata;
+   	return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Query'=>$qdata,
+            ];
 
    }
    public static function updatequery($data){
@@ -46,7 +58,13 @@ class Query extends Model
    		'pointed_to'=>$data->pointed_to
 
    	]);
-   	return $qdata;
+   	   return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Message'=>'Query Updated Successfully',
+            ];
 
    }
 }

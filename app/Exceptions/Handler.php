@@ -59,7 +59,12 @@ class Handler extends ExceptionHandler
 
             /** return response()->json(['error' => 'Unauthenticated.'], 401); */
 
-                $response = ['status' => 'error','message' => 'You pass invalid token'];
+                $response = [
+                        'Login' => [
+                            'response_message'=>"error",
+                            'response_code'=>"0"
+                           ],
+                    ];
 
                 return response()->json($response);
 

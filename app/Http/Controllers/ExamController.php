@@ -50,12 +50,24 @@ class ExamController extends Controller
     public function deleteQuery(Request $request)
     {
        $create=Query::where('query_id',$request->query_id)->delete();
-       return $create;
+          return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Message'=>'Query Deleted Successfully',
+            ];
     }
     public function deleteResponse(Request $request)
     {
-       $create=Response::where('response_id',$request->response_id)->delete();
-       return $create;
+       $create=Response::where('response_id',$request->Response_Id)->delete();
+          return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Message'=>'Response Deleted Successfully',
+            ];
     }
     public function queryResponse(Request $request)
     {
