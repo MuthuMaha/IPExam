@@ -64,26 +64,53 @@ class Ipmpc extends Model
           
     }
     public static function markDetails($data){
-       $check=DB::table('IP_Exam_Conducted_For as a')
-        ->join('t_course_group as b', 'a.group_id', '=', 'b.GROUP_ID')
-        ->select('b.GROUP_NAME')
-        ->where('a.exam_id',$data->EXAM_ID)
-        ->get();
-        $table='IP_'.str_replace(".","",$check[0]->GROUP_NAME).'_Marks';
-        $detail=DB::table($table)->select('PHYSICS','CHEMISTRY','MATHEMATICS','TOTAL','ENGLISH','GK','SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK','MATHEMATICS_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where(['CAMPUS_ID'=>$data->CAMPUS_ID,'STUD_ID'=>$data->STUD_ID,'exam_id'=>$data->EXAM_ID]
-      )->get();
-        $test_type_id=DB::table('IP_Exam_Details')->select('Test_type_id')->where('exam_id',$data->EXAM_ID)->get();
-        $max_pass=DB::table('IP_Test_Max_Marks')->where('test_type_id',$test_type_id[0]->Test_type_id)->get();
-        $subjects=DB::table('0_subjects')->get();
-        
-        return [
-                    'Login' => [
-                        'response_message'=>"success",
-                        'response_code'=>"1",
-                        ],
-                        'Exam_details'=>$detail,
-                        'Max_Pass_Marks'=>$max_pass,
-                        'Subjects'=>$subjects,
-                 ];
+
+      $check=DB::table('IP_Exam_Conducted_For as a')
+      ->join('t_course_group as b', 'a.group_id', '=', 'b.GROUP_ID')
+      ->select('b.GROUP_NAME')
+      ->where('a.exam_id',$data->EXAM_ID)
+      ->get();
+
+      $table='IP_'.str_replace(".","",$check[0]->GROUP_NAME).'_Marks';
+
+      $name=DB::select('SHOW columns FROM '.$table);
+
+      $test_type_id=DB::table('IP_Exam_Details')->select('Test_type_id')->where('exam_id',$data->EXAM_ID)->get();
+
+      if(str_replace(".","",$check[0]->GROUP_NAME)=="MPC")
+
+              $detail=DB::table($table)->select('PHYSICS','CHEMISTRY','MATHEMATICS','TOTAL','ENGLISH','GK','SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK','MATHEMATICS_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where(['STUD_ID'=>$data->STUD_ID,'exam_id'=>$data->EXAM_ID]
+            )->get();
+
+        else  
+              $detail=DB::table($table)->select('PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'BOTANY', 'ZOOLOGY', 'ENGLISH', 'GK', 'SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'BIOLOGY_RANK', 'BOTANY_RANK', 'ZOOLOGY_RANK', 'ENGLISH_RANK', 'GK_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where(['STUD_ID'=>$data->STUD_ID,'exam_id'=>$data->EXAM_ID]
+            )->toArray();
+
+           foreach ($detail[0] as $key => $value)
+          {
+              $array[$key] = $value;
+          }
+          foreach ($name as $key => $value) {
+              $s[$value->Field][0] = (object)array();
+
+            $s[$value->Field]=DB::table('0_subjects as s')
+                  ->join('IP_Test_Max_Marks as i','i.subject_id','=','s.subject_id')
+                  ->select('s.subject_id','s.subject_name','i.max_marks','i.pass_marks')
+                  ->where('s.subject_name',$value->Field)
+                  ->where('i.test_type_id',$test_type_id[0]->Test_type_id)
+                  ->get();  
+
+                  $a=$value->Field;
+
+                    if(array_key_exists($a, $array))
+                    {
+                    $s[$a][1] = (object)array();
+                    $s[$a][1]->obtained=$array[$a];
+
+                    }
+
+          }
+
+        return $s;
     }
 }
