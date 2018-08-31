@@ -53,7 +53,7 @@ class ValidationException extends Exception
      */
     public function __construct($validator, $response = null, $errorBag = 'default')
     {
-        parent::__construct('The given data was invalid.');
+        parent::__construct('error');
 
         $this->response = $response;
         $this->errorBag = $errorBag;
@@ -68,10 +68,10 @@ class ValidationException extends Exception
      */
     public static function withMessages(array $messages)
     {
-        return new static(tap(ValidatorFacade::make([], []), function ($validator) use ($messages) {
-            foreach ($messages as $key => $value) {
-                foreach (Arr::wrap($value) as $message) {
-                    $validator->errors()->add($key, $message);
+        return new static(tap(ValidatorFacade::make([], []), function ($validator) use ($response_messages) {
+            foreach ($response_messages as $key => $value) {
+                foreach (Arr::wrap($value) as $response_message) {
+                    $validator->errors()->add($key, $response_message);
                 }
             }
         }));

@@ -84,7 +84,7 @@ class Ipmpc extends Model
 
         else  
               $detail=DB::table($table)->select('PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'BOTANY', 'ZOOLOGY', 'ENGLISH', 'GK', 'SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'BIOLOGY_RANK', 'BOTANY_RANK', 'ZOOLOGY_RANK', 'ENGLISH_RANK', 'GK_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where(['STUD_ID'=>$data->STUD_ID,'exam_id'=>$data->EXAM_ID]
-            )->toArray();
+            )->get();
 
            foreach ($detail[0] as $key => $value)
           {
@@ -110,7 +110,13 @@ class Ipmpc extends Model
                     }
 
           }
-
-        return $s;
+          unset($s['sl'],$s['CAMPUS_ID'],$s['STUD_ID'],$s['exam_id']);
+        return   [
+                    'Login' => [
+                        'response_message'=>"success",
+                        'response_code'=>"1",
+                        ],
+                        'Details'=>$s,
+                 ];
     }
 }

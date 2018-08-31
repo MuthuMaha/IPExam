@@ -22,8 +22,13 @@ class RestValidator extends Validator {
 
         $customMessage = new MessageBag();
 
-        $customMessage->merge(['code' => strtolower($rule.'_rule_error')]);
-        $customMessage->merge(['message' => $message]);
+        // $customMessage->merge(['code' => strtolower($rule.'_rule_error')]);
+        $customMessage->merge([
+                        
+                            'response_message'=>$message,
+                            'response_code'=>"0"
+                           
+                    ]);
 
         $this->messages->add($attribute, $customMessage);//dd($this->messages);
     }

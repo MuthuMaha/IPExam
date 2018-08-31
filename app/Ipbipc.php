@@ -5,7 +5,7 @@ use File;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
-class Ipbpc extends Model
+class Ipbipc extends Model
 {
     protected $table='IP_BIPC_Marks';
     protected $primaryKey='sl';

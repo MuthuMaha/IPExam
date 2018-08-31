@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Auth;
+use App\Http\Requests\LoginValidation;
 use Carbon\Carbon;
 use App\Employee;
 use App\Parent_details;
@@ -19,21 +20,41 @@ use File;
 class EmployeeController extends Controller
 {
    
-     public function empshow(Request $request)
+     public function empshow(LoginValidation $request)
     {
-           
+        if(!$request->USERNAME)
+          return [
+                        'Login' => [
+                            'response_message'=>"USERNAME required",
+                            'response_code'=>"0"
+                           ],
+                    ];
+        if(!$request->PASSWORD)
+          return [
+                        'Login' => [
+                            'response_message'=>"PASSWORD required",
+                            'response_code'=>"0"
+                           ],
+                    ];
+        if(!$request->user_type)
+          return [
+                        'Login' => [
+                            'response_message'=>"user_type required",
+                            'response_code'=>"0"
+                           ],
+                    ];
         $msg="This is old token";
         if($request->user_type=="employee")
         {
-        Auth::attempt([ 'PAYROLL_ID' => $request->get('USERNAME'), 'password' => $request->get('PASS_WORD') ]);
+        Auth::attempt([ 'PAYROLL_ID' => $request->get('USERNAME'), 'password' => $request->get('PASSWORD') ]);
         }
         if($request->user_type=="student")
         {
-        Auth::guard('t_student')->attempt([ 'ADM_NO' => $request->get('USERNAME'), 'password' => $request->get('PASS_WORD') ]);
+        Auth::guard('t_student')->attempt([ 'ADM_NO' => $request->get('USERNAME'), 'password' => $request->get('PASSWORD') ]);
         }
         if($request->user_type=="parent")
         {
-        Auth::guard('tparent')->attempt([ 'ADM_NO' => $request->get('USERNAME'), 'password' => $request->get('PASS_WORD') ]);
+        Auth::guard('tparent')->attempt([ 'ADM_NO' => $request->get('USERNAME'), 'password' => $request->get('PASSWORD') ]);
         }
       if(Auth::id() || Auth::guard('t_student')->id()|| Auth::guard('tparent')->id()){
          $c=array();
@@ -161,11 +182,7 @@ class EmployeeController extends Controller
          
             }
            }
-                       // fetching exam details of logged in branch from t_
-                       // $exam= "";
-                       // $exam=DB::table('1_exam_admin_create_exam as ea','t_employee as e','t_campus as c')
-                                
-            // fetching the token for particular ID
+                     
            if(Auth::id())
                     return [
                         'Login' => [
@@ -175,7 +192,6 @@ class EmployeeController extends Controller
                         'Token'=>$token[0],
                         'Role'=>$c,
                         'Details'=>$details
-                        // 'Students'=>Auth::guard('tparent')->user()->ADM_NO, 
                     ];
                     else
                          return [
@@ -184,8 +200,7 @@ class EmployeeController extends Controller
                             'response_code'=>"1",
                             ],
                         'Token'=>$token[0],
-                        'Details'=>$details
-                        // 'Students'=>Auth::guard('tparent')->user()->ADM_NO, 
+                        'Details'=>$details 
                     ];
         }
         else{

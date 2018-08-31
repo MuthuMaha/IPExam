@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Employee;
 use App\Ipexam;
 use App\Campusupload;
-use App\Ipbpc;
+use App\Ipbipc;
 use App\Ipmpc;
 use App\Query;
 use App\Response;
@@ -129,7 +129,7 @@ class ExamController extends Controller
     }
     public function mpc(Resultupload $request){
 
-      $result=Ipbpc::result_upload($request);
+      $result=Ipbipc::result_upload($request);
      return $result;
 
 
