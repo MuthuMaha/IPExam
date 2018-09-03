@@ -16,10 +16,10 @@ class Profile extends JsonResource
     {
         return [
             'stud_id' => $this[0]->ADM_NO,
-            'name' => $this[0]->NAME,
+            'NAME' => $this[0]->NAME,
             'group' => $this[0]->GROUP_NAME,
             'stream' => $this[0]->stream->STREAM_NAME,
-            'class' => $this[0]->class_year->CLASS_NAME,
+            'className' => $this[0]->class_year->CLASS_NAME,
             'program' => $this[0]->program->PROGRAM_NAME,
             'campus' => $this[0]->campus->CAMPUS_NAME,
             'section' => $this[0]->section == '' ? null : $this[0]->section->section_name,

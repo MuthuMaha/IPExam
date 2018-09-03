@@ -97,10 +97,10 @@ class EmployeeController extends Controller
                         'Login' => [
                             'response_message'=>"success",
                             'response_code'=>"1",
-                            ],
                             'Token'=>$token->access_token,
                             'Role'=>$c,
-                            'Details'=>$details
+                            ],
+                            'Details'=>$details,
                     ];
          
             }
@@ -109,6 +109,7 @@ class EmployeeController extends Controller
                 $details=[
                     'NAME'=>Auth::guard('t_student')->user()->NAME,
                     'USER'=>'STUDENT',
+                    'GROUP'=>Auth::guard('t_student')->user()->GROUP_NAME,
                     'ACADEMIC_YEAR'=>Auth::guard('t_student')->user()->ACADEMIC_YEAR
                           ];
                        $role=DB::table('roles')
@@ -136,9 +137,9 @@ class EmployeeController extends Controller
                         'Login' => [
                             'response_message'=>"success",
                             'response_code'=>"1",
-                            ],
                             'Token'=>$token->access_token,
-                            'Details'=>$details
+                            ],
+                            'Details'=>$details,
                     ];
          
             }
@@ -149,7 +150,7 @@ class EmployeeController extends Controller
              $details=[
                     'NAME'=>$student[0]->PARENT_NAME,
                     'USER'=>'PARENT',
-                    'PARENT OF'=>Auth::guard('tparent')->user()->NAME
+                    'STUDENT'=>Auth::guard('tparent')->user()->NAME
                           ];
                 $role=DB::table('roles')                  
                   ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
@@ -174,9 +175,9 @@ class EmployeeController extends Controller
                         'Login' => [
                             'response_message'=>"success",
                             'response_code'=>"1",
-                            ],
                             'Token'=>$token->access_token,
-                            'Details'=>$details
+                            ],
+                            'Details'=>$details,
                           
                     ];
          
@@ -188,19 +189,19 @@ class EmployeeController extends Controller
                         'Login' => [
                             'response_message'=>"success",
                             'response_code'=>"1",
-                            ],
                         'Token'=>$token[0],
                         'Role'=>$c,
-                        'Details'=>$details
+                            ],
+                        'Details'=>$details,
                     ];
                     else
                          return [
                         'Login' => [
                             'response_message'=>"success",
                             'response_code'=>"1",
-                            ],
                         'Token'=>$token[0],
-                        'Details'=>$details 
+                            ],
+                        'Details'=>$details, 
                     ];
         }
         else{
