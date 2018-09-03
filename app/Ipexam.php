@@ -48,8 +48,8 @@ class Ipexam extends Model
         }
       }
    	 $exam_create=Ipexam::create([
-                    'Exam_name'=>$data->Exam_Name,
-                    'Date_exam'=>$data->Date_Exam,
+                    'Exam_name'=>$data->Exam_name,
+                    'Date_exam'=>$data->Date_exam,
                     'Test_type_id'=>$data->Test_Type_Id,
                     'Board'=>$data->Board,
                     'created_by'=>$user,
@@ -149,20 +149,20 @@ class Ipexam extends Model
                     ];
    }
    public static function editExam($data){
-      if(Auth::id()){
-    $user=Auth::id();
-     }
-     elseif(Auth::guard('t_student')->id()){
-       $user=Auth::guard('t_student')->id();
-     }
-     elseif(Auth::guard('tparent')->id()){
-      $user=Auth::guard('tparent')->id();
-     }
-     else{
-      $user="";
-     }
-     $examdetailcreate=Ipexam::where('exam_id',$data->route('id'))
-     ->update(['Exam_name'=>$data->Exam_name,'Date_exam'=>$data->Date_exam,'Test_type_id'=>$data->Test_Type_Id,'Board'=>$data->Board,'updated_by'=>$user]);
+        if(Auth::id()){
+      $user=Auth::id();
+       }
+       elseif(Auth::guard('t_student')->id()){
+         $user=Auth::guard('t_student')->id();
+       }
+       elseif(Auth::guard('tparent')->id()){
+        $user=Auth::guard('tparent')->id();
+       }
+       else{
+        $user="";
+       }
+       $examdetailcreate=Ipexam::where('exam_id',$data->route('id'))
+       ->update(['Exam_name'=>$data->Exam_name,'Date_exam'=>$data->Date_exam,'Test_type_id'=>$data->Test_Type_Id,'Board'=>$data->Board,'updated_by'=>$user]);
      return [
                         'Login' => [
                             'response_message'=>"success",
