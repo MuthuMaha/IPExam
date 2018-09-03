@@ -100,6 +100,7 @@ class ExamController extends Controller
        return $update;
     }
     public function ipdelete(Request $request){
+      
       $d=Campusupload::where('exam_id',$request->route('id'))->get();
       if(count($d)==0){
         $ip_delete=Ipexam::where('exam_id',$request->route('id'))
@@ -107,7 +108,7 @@ class ExamController extends Controller
         $ip_examcon=Ipexamconductedfor::where('exam_id',$request->route('id'))->delete();
         return ['success'=>['Message'=>'Deleted success']];
       }
-      return ['success'=>['Message'=>'Not Deleted because of some upload']];
+      return ['success'=>['Message'=>'Not Deleted because of some result upload']];
 
     }
     // public function ipview(Request $request){
@@ -147,6 +148,10 @@ class ExamController extends Controller
     public function markDetails(Request $request){
       $result=Ipmpc::markDetails($request);
 
+      return $result;
+    }
+    public function performancechart(Request $request){
+      $result=Ipmpc::performancechart($request);
       return $result;
     }
    

@@ -61,16 +61,28 @@ class Student extends Authenticatable
     }
 
 
-    public static function written_tests($stud_id){
+    public static function written_tests($data){
 
         
-        //Send all the tests written by student with respect to the examtypes (UT,Final,Pre Final..etc)
-    	$test_types=DB::table('0_test_types')->get();
-        foreach($test_types as $value){
+        $test_types=DB::table('0_test_types')->where('test_type_id',$data->test_type_id)->get();
+     //    foreach($test_types as $value){
             
-		  $query[$value->test_type_name] = DB::select("select ipd.Exam_name,ipd.Exam_id,ipd.Test_type_id,ecf.group_id,ecf.stream_id,ecf.classyear_id,ecf.program_id from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from t_student t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id WHERE t.adm_no='".$stud_id."') ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$value->test_type_id."'"
-		            );   
-		}
+          $query[$test_types[0]->test_type_name] = DB::select("select ipd.Exam_name,ipd.Exam_id,ipd.Test_type_id,ecf.group_id,ecf.stream_id,ecf.classyear_id,ecf.program_id from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from t_student t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id WHERE t.adm_no='".$data->stud_id."') ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$data->test_type_id."'"
+                    );   
+        // }
+ 
+        return $query;
+
+    }
+
+
+    public static function written_tests_date($data){
+
+            $dateValue = strtotime($data->test_date);
+
+            $yr = date("Y-m", $dateValue) ." "; 
+                    $test_types=DB::table('0_test_types')->where('test_type_id',$data->test_type_id)->get();
+            		  $query[$test_types[0]->test_type_name] = DB::select("select ipd.Exam_name,ipd.Exam_id,ipd.Test_type_id,ecf.group_id,ecf.stream_id,ecf.classyear_id,ecf.program_id from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from t_student t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id WHERE t.adm_no='".$data->stud_id."') ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$data->test_type_id."' and ipd.created_at BETWEEN '".$yr."-01 00:00:00' and '".$yr."-31 23:59:59'");   
  
         return $query;
 
