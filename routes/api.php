@@ -66,9 +66,7 @@ use Illuminate\Http\Request;
 
 		//student Login Api's 
 
-		Route::get('student/{stud_id}/profile','StudentController@profile_details');
-		Route::get('parent/{parent_id}/profile','StudentController@parent_profile_details');
-		Route::get('employee/{employee_id}/profile','StudentController@employee_profile_details');
+		Route::get('profile_details','StudentController@profile_details');
 		Route::get('student/{stud_id}/reports_card/{test_type_id}','StudentController@written_tests');
 		Route::get('student/{stud_id}/reports_card/{test_type_id}/{test_date}','StudentController@written_tests_date');
 	});

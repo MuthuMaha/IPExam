@@ -15,20 +15,17 @@ class StudentController extends Controller
 {
     //
     public function profile_details(Request $request){
-
+        
+        if($request->stud_id)
          return new ProfileResource(Student::profile($request->stud_id));
 
+        if($request->parent_id)
+        return new ProfileResource(Student::profile($request->parent_id));
+
+        if($request->employee_id)
+         return new EmployeeResource(Employee::profile($request->employee_id));
+
     }
-      public function parent_profile_details(Request $request){
-
-         return new ProfileResource(Student::profile($request->parent_id));
-
-        }
-      public function employee_profile_details(Request $request){
-
-             return new EmployeeResource(Employee::profile($request->employee_id));
-
-        }
 
     public function written_tests(Request $request){
 
