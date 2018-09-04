@@ -110,6 +110,7 @@ class EmployeeController extends Controller
                     'NAME'=>Auth::guard('t_student')->user()->NAME,
                     'USER'=>'STUDENT',
                     'GROUP'=>Auth::guard('t_student')->user()->GROUP_NAME,
+                    'SUBJECT'=>Auth::guard('t_student')->user()->SUBJECT,
                     'ACADEMIC_YEAR'=>Auth::guard('t_student')->user()->ACADEMIC_YEAR
                           ];
                        $role=DB::table('roles')

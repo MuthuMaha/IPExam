@@ -135,7 +135,7 @@ class Ipmpc extends Model
               $detail[]=DB::table('IP_BIPC_Marks')->select('exam_id','PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'BOTANY', 'ZOOLOGY', 'ENGLISH', 'GK', 'SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'BIOLOGY_RANK', 'BOTANY_RANK', 'ZOOLOGY_RANK', 'ENGLISH_RANK', 'GK_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where('STUD_ID','=',$data->STUD_ID
             )->get();
 
-//Fetch column name 
+      //Fetch column name 
               for ($i=0; $i <=1 ; $i++) { 
       $table='IP_'.str_replace(".","",Auth::user()->GROUP_NAME).'_Marks';
 
@@ -148,7 +148,7 @@ class Ipmpc extends Model
                   $array[]=$value;
                 }
               }
-//
+        //Fetch Max,pass,Obtained mark Details
                foreach ($name[0] as $key => $value) 
                {
               

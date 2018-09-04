@@ -32,5 +32,14 @@ class Employee extends Authenticatable
         return $this->hasMany(Token::class, 'user_id', 'EMPLOYEE_ID');
     }
      
+     public function campus()
+    {
+        return $this->hasOne('App\BaseModels\Campus','CAMPUS_ID', 'CAMPUS_ID');
+    }
 
+     public static function profile($employee_id){
+
+        return static::where('PAYROLL_ID','=',$employee_id)->with('campus')->get();
+
+    }
 }

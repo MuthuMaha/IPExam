@@ -57,7 +57,7 @@ use Illuminate\Http\Request;
 		Route::put('query_response', 'ExamController@updatequeryResponse');
 		Route::delete('query_response', 'ExamController@deleteResponse');
 
-		//let these be here for somtime
+		//let these be here for sometime
 
 		Route::get('groups','BaseController@groups');
 		Route::get('class_years/{group_id}','BaseController@class_year_wrt_group');
@@ -67,6 +67,8 @@ use Illuminate\Http\Request;
 		//student Login Api's 
 
 		Route::get('student/{stud_id}/profile','StudentController@profile_details');
+		Route::get('parent/{parent_id}/profile','StudentController@parent_profile_details');
+		Route::get('employee/{employee_id}/profile','StudentController@employee_profile_details');
 		Route::get('student/{stud_id}/reports_card/{test_type_id}','StudentController@written_tests');
 		Route::get('student/{stud_id}/reports_card/{test_type_id}/{test_date}','StudentController@written_tests_date');
 	});
