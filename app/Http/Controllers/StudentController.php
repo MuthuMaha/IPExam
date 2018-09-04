@@ -21,7 +21,7 @@ class StudentController extends Controller
     }
       public function parent_profile_details(Request $request){
 
-             return new ParentResource(Parents::profile($request->parent_id));
+         return new ProfileResource(Student::profile($request->parent_id));
 
         }
       public function employee_profile_details(Request $request){
