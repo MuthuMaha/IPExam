@@ -16,14 +16,16 @@ class StudentController extends Controller
     //
     public function profile_details(Request $request){
         
-        if($request->stud_id)
-         return new ProfileResource(Student::profile($request->stud_id));
+        if($request->user_type=="student")
+         return new ProfileResource(Student::profile($request->USERID));
 
-        if($request->parent_id)
-        return new ProfileResource(Student::profile($request->parent_id));
+        if($request->user_type=="parent")
+        return new ProfileResource(Student::profile($request->USERID));
 
-        if($request->employee_id)
-         return new EmployeeResource(Employee::profile($request->employee_id));
+        if($request->user_type=="employee")
+         return new EmployeeResource(Employee::profile($request->USERID));
+
+     return $request;
 
     }
 
