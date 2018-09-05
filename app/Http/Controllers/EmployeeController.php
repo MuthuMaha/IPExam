@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Employee;
 use App\Parent_details;
 use App\BaseModels\Student;
+use App\BaseModels\Campus;
 use App\Tparent;
 use App\Token;
 use App\User;
@@ -58,15 +59,12 @@ class EmployeeController extends Controller
         }
       if(Auth::id() || Auth::guard('t_student')->id()|| Auth::guard('tparent')->id()){
          $c=array();
-            // here im getting the campus_id
-            $campus_id="54";
-            // Here Im getting the role for this particular ID
-                       $exam=DB::select('select ea.test_code,ea.start_date,ea.last_date_to_upload,ea.last_time_to_upload,ea.sl from 1_exam_admin_create_exam as ea where  ea.STATE_ID in (select c.state_id from t_employee as e,t_campus as c where c.campus_id=e.campus_id and c.campus_id="54")');
             if(Auth::id()){
                 $details=[
                     'NAME'=>Auth::user()->USER_NAME,
                     'USER'=>'EMPLOYEE',
-                    'DESIGNATION'=>Auth::user()->DESIGNATION
+                    'DESIGNATION'=>Auth::user()->DESIGNATION,
+                    'CAMPUS_ID'=>Auth::user()->CAMPUS_ID
                           ];
             $role=DB::table('roles')
                   ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
@@ -111,6 +109,7 @@ class EmployeeController extends Controller
                     'USER'=>'STUDENT',
                     'GROUP'=>Auth::guard('t_student')->user()->GROUP_NAME,
                     'SUBJECT'=>Auth::guard('t_student')->user()->SUBJECT,
+                    'CAMPUS_ID'=>Auth::guard('t_student')->user()->CAMPUS_ID,
                     'ACADEMIC_YEAR'=>Auth::guard('t_student')->user()->ACADEMIC_YEAR
                           ];
                        $role=DB::table('roles')
@@ -151,7 +150,8 @@ class EmployeeController extends Controller
              $details=[
                     'NAME'=>$student[0]->PARENT_NAME,
                     'USER'=>'PARENT',
-                    'STUDENT'=>Auth::guard('tparent')->user()->NAME
+                    'STUDENT'=>Auth::guard('tparent')->user()->NAME,
+                    'CAMPUS_ID'=>Auth::guard('tparent')->user()->CAMPUS_ID
                           ];
                 $role=DB::table('roles')                  
                   ->join('user_roles','roles.roll_id','=','user_roles.ROLL_ID')
