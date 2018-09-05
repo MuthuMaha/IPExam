@@ -157,7 +157,28 @@ class ExamController extends Controller
    
     public function test_type(Request $request){
       $result=DB::table('0_test_types')->get();
-      return $result;
+      return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Result'=>$result,
+            ];
+    }
+    public function result_details(Request $request){
+      $subjects=DB::table('0_subjects')->get();
+      $employeelist=Employee::select('DESIGNATION','PAYROLL_ID')
+                // ->where('PAYROLL_ID',Auth::id())
+                    ->distinct()
+                    ->get();
+       return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Subjects'=>$subjects,
+                'Employeelist'=>$employeelist,
+            ];
     }
    
 }
