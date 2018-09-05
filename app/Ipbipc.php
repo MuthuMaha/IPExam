@@ -28,6 +28,7 @@ class Ipbipc extends Model
 		 $path=public_path().'/Result_sheet/BIPC/'.$data->CAMPUS_ID.'/'.$data->EXAM_ID.'/'.$data->STUD_ID.'/'.$data->SUBJECT_ID;
 	}	     
 	File::isDirectory($path) or File::makeDirectory($path, 0777, true, true);
+	Ipexam::where('exam_id',$data->EXAM_ID)->update(['path'=>','.$path]);
 	$images=array();
 	if($files=$data->file('files'))
 	{
