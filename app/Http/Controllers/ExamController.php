@@ -155,4 +155,9 @@ class ExamController extends Controller
       return $result;
     }
    
+    public function test_type(Request $request){
+      $result=DB::table('0_test_types')->get();
+      return $result;
+    }
+   
 }
