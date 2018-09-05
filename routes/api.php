@@ -36,6 +36,7 @@ use Illuminate\Http\Request;
 
 		Route::post('analytical_info', 'ExamController@markDetails');
 		Route::post('performance', 'ExamController@performancechart');
+		Route::post('test_type', 'ExamController@test_type');
 
 		//Result Image CRUD
 
