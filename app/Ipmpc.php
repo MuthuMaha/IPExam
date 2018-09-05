@@ -222,7 +222,7 @@ class Ipmpc extends Model
                 ->join('IP_Test_Max_Marks as l','l.test_type_id','=','e.Test_type_id')
                 ->select(DB::raw("(s.".$a."/l.max_marks)*100 as Percentage,s.".$a.",l.max_marks,l.pass_marks"))
                 ->where("l.subject_id","=",$s[$value->Field][0]->subject_id)
-                ->where("l.test_type_id","=",$data->test_type_id)
+                // ->where("l.test_type_id","=",$data->test_type_id)
                
                 ->Where("s.STUD_ID","=",$data->STUD_ID)
               
