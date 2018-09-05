@@ -34,14 +34,14 @@ use Illuminate\Http\Request;
 
 		//Pictorial/Grapical Representation
 
-		Route::get('analytical_info', 'ExamController@markDetails');
-		Route::get('performance', 'ExamController@performancechart');
+		Route::post('analytical_info', 'ExamController@markDetails');
+		Route::post('performance', 'ExamController@performancechart');
 
 		//Result Image CRUD
 
 		Route::post('result_upload', 'ExamController@mpc');
 		Route::delete('deleteresultimages','ExamController@deleteresult');
-		Route::get('resultimagesview','ExamController@resultimagesview');
+		Route::post('resultimagesview','ExamController@resultimagesview');
 
 		//Query API
 
@@ -66,9 +66,9 @@ use Illuminate\Http\Request;
 
 		//student Login Api's 
 
-		Route::get('profile_details','StudentController@profile_details');
-		Route::get('student/{stud_id}/reports_card/{test_type_id}','StudentController@written_tests');
-		Route::get('student/{stud_id}/reports_card/{test_type_id}/{test_date}','StudentController@written_tests_date');
+		Route::post('profile_details','StudentController@profile_details');
+		Route::post('reports_card','StudentController@written_tests');
+		Route::post('reports_card_date','StudentController@written_tests_date');
 	});
 
 
