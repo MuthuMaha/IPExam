@@ -55,7 +55,6 @@ class Student extends Authenticatable
     }
 
     public static function profile($stud_id){
-
     	return static::where('ADM_NO','=',$stud_id)->with('program','stream','class_year','campus','section','parent')->get();
 
     }

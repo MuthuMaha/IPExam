@@ -16,16 +16,37 @@ class StudentController extends Controller
     //
     public function profile_details(Request $request){
         
-        if($request->user_type=="student")
-         return new ProfileResource(Student::profile($request->USERID));
+        if($request->user_type=="student"){
+        $result=new ProfileResource(Student::profile($request->USERID));
+         return [
+                    'Login' => [
+                        'response_message'=>"success",
+                        'response_code'=>"1",
+                        ],
+                        'Details'=>$result,
+                ];
+            }
+        if($request->user_type=="parent"){
+        $result=new ProfileResource(Student::profile($request->USERID));
+         return [
+                    'Login' => [
+                        'response_message'=>"success",
+                        'response_code'=>"1",
+                        ],
+                        'Details'=>$result,
+                ];
+            }
+        if($request->user_type=="employee"){
+         $result=new EmployeeResource(Employee::profile($request->USERID));
 
-        if($request->user_type=="parent")
-        return new ProfileResource(Student::profile($request->USERID));
-
-        if($request->user_type=="employee")
-         return new EmployeeResource(Employee::profile($request->USERID));
-
-     return $request;
+          return [
+                        'Login' => [
+                            'response_message'=>"success",
+                            'response_code'=>"1",
+                            ],
+                            'Details'=>$result,
+                    ];
+                }
 
     }
 
