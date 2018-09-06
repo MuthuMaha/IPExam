@@ -80,4 +80,16 @@ class Campusupload extends Model
                     ];
 
    }
+   public static function ip_delete($id){
+
+      $d=Campusupload::where('exam_id',$id)->get();
+      if(count($d)==0){
+        $ip_delete=Ipexam::where('exam_id',$id)
+        ->delete();
+        $ip_examcon=Ipexamconductedfor::where('exam_id',$id)->delete();
+        return ['success'=>['Message'=>'Deleted success']];
+      }
+      return ['success'=>['Message'=>'Not Deleted because of some result upload']];
+
+   }
 }

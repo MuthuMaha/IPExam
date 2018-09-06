@@ -74,19 +74,19 @@ class Ipmpc extends Model
 
       //fetch records from table
               $detail[]=DB::table('IP_MPC_Marks')->select('exam_id','PHYSICS','CHEMISTRY','MATHEMATICS','TOTAL','ENGLISH','GK','SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK','MATHEMATICS_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'M_RANK', 'P_RANK', 'C_RANK')
-              ->where('STUD_ID','=',$data->STUD_ID)
+              ->where('STUD_ID','=',Auth::user()->STUD_ID)
               ->where('exam_id','=',$data->EXAM_ID)
               ->get();
 
               $detail[]=DB::table('IP_BIPC_Marks')->select('exam_id','PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'BOTANY', 'ZOOLOGY', 'ENGLISH', 'GK', 'SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'BIOLOGY_RANK', 'BOTANY_RANK', 'ZOOLOGY_RANK', 'ENGLISH_RANK', 'GK_RANK', 'M_RANK', 'P_RANK', 'C_RANK')
-              ->where('STUD_ID','=',$data->STUD_ID)
+              ->where('STUD_ID','=',Auth::user()->STUD_ID)
               ->where('exam_id','=',$data->EXAM_ID)
               ->get();
               if(count($detail[0])==0 && count($detail[1])==0)
               {
                 return [
                     'Login' => [
-                        'response_message'=>"error student id mot match with our record",
+                        'response_message'=>"error student record mot match with our record",
                         'response_code'=>"0",
                         ],
                       ];
@@ -97,8 +97,8 @@ class Ipmpc extends Model
 
       $name[]=DB::select('SHOW columns FROM '.$table);
 
-                foreach ($detail[$i] as $key => $value) {
-               
+                foreach ($detail[$i] as $key => $value) 
+                {               
                   $test_type_id[]=DB::table('IP_Exam_Details')->select('Test_type_id')->where('exam_id',$value->exam_id)->get();
 
                   $array[]=$value;
@@ -132,7 +132,7 @@ class Ipmpc extends Model
                 ->where("l.subject_id","=",$s[$value->Field][0]->subject_id)
                 ->where("l.test_type_id","=",$data->test_type_id)
                
-                ->Where("s.STUD_ID","=",$data->STUD_ID)
+                ->Where("s.STUD_ID","=",Auth::user()->STUD_ID)
               
                 ->get();
               }
@@ -169,11 +169,12 @@ class Ipmpc extends Model
       $total_avg=array();
 
       //fetch records from table
-              $detail[]=DB::table('IP_MPC_Marks')->select('exam_id','PHYSICS','CHEMISTRY','MATHEMATICS','TOTAL','ENGLISH','GK','SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK','MATHEMATICS_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where('STUD_ID','=',$data->STUD_ID
+              $detail[]=DB::table('IP_MPC_Marks')->select('exam_id','PHYSICS','CHEMISTRY','MATHEMATICS','TOTAL','ENGLISH','GK','SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK','MATHEMATICS_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where('STUD_ID','=',Auth::user()->STUD_ID
             )->get();
 
-              $detail[]=DB::table('IP_BIPC_Marks')->select('exam_id','PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'BOTANY', 'ZOOLOGY', 'ENGLISH', 'GK', 'SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'BIOLOGY_RANK', 'BOTANY_RANK', 'ZOOLOGY_RANK', 'ENGLISH_RANK', 'GK_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where('STUD_ID','=',$data->STUD_ID
+              $detail[]=DB::table('IP_BIPC_Marks')->select('exam_id','PHYSICS', 'CHEMISTRY', 'BIOLOGY', 'BOTANY', 'ZOOLOGY', 'ENGLISH', 'GK', 'SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'BIOLOGY_RANK', 'BOTANY_RANK', 'ZOOLOGY_RANK', 'ENGLISH_RANK', 'GK_RANK', 'M_RANK', 'P_RANK', 'C_RANK')->where('STUD_ID','=',Auth::user()->STUD_ID
             )->get();
+
               if(count($detail[0])==0 && count($detail[1])==0)
               {
                 return [
@@ -184,7 +185,8 @@ class Ipmpc extends Model
                       ];
               }
       //Fetch column name 
-              for ($i=0; $i <=1 ; $i++) { 
+              for ($i=0; $i <=1 ; $i++) 
+              { 
       $table='IP_'.str_replace(".","",Auth::user()->GROUP_NAME).'_Marks';
 
       $name[]=DB::select('SHOW columns FROM '.$table);
@@ -224,7 +226,7 @@ class Ipmpc extends Model
                 ->where("l.subject_id","=",$s[$value->Field][0]->subject_id)
                 // ->where("l.test_type_id","=",$data->test_type_id)
                
-                ->Where("s.STUD_ID","=",$data->STUD_ID)
+                ->Where("s.STUD_ID","=",Auth::user()->STUD_ID)
               
                 ->get();
               }
