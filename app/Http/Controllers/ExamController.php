@@ -99,23 +99,11 @@ class ExamController extends Controller
         $update=Ipexam::ipeditexamdetails($request);
        return $update;
     }
-    public function ipdelete(Request $request){
-      
-      $d=Campusupload::where('exam_id',$request->route('id'))->get();
-      if(count($d)==0){
-        $ip_delete=Ipexam::where('exam_id',$request->route('id'))
-        ->delete();
-        $ip_examcon=Ipexamconductedfor::where('exam_id',$request->route('id'))->delete();
-        return ['success'=>['Message'=>'Deleted success']];
-      }
-      return ['success'=>['Message'=>'Not Deleted because of some result upload']];
-
+    public function ipdelete(Request $request)
+    {    
+      $result=Campusupload::ip_delete($request->route('id'));
+      return $result;
     }
-    // public function ipview(Request $request){
-    //     $ip_exam=Ipexam::where('exam_id',$request->exam_id)->get();
-    //     $ip_examcon=Ipexamconductedfor::where('exam_id',$request->exam_id)->get();
-    //    return ['success'=>['Ip_exam'=>$ip_exam,'Ip_exam_conducted_for'=>$ip_examcon]];
-    // }
     public function bipc(Request $request){
     $result_store=Campusupload::result_store($request);
     return $result_store;
