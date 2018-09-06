@@ -17,7 +17,7 @@ class Profile extends JsonResource
         return [
             'stud_id' => $this[0]->ADM_NO,
             'NAME' => $this[0]->NAME,
-            'group' => $this[0]->GROUP_NAME,
+            'GROUP' => $this[0]->GROUP_NAME,
             'stream' => $this[0]->stream->STREAM_NAME,
             'className' => $this[0]->class_year->CLASS_NAME,
             'program' => $this[0]->program->PROGRAM_NAME,
