@@ -79,7 +79,9 @@ class Employee extends Authenticatable
          $c=array();
             if(Auth::id()){
                 $details=[
-                    'NAME'=>Auth::user()->USER_NAME,
+                    'USER_NAME'=>Auth::user()->USER_NAME,
+                    'SURNAME'=>Auth::user()->SURNAME,
+                    'NAME'=>Auth::user()->NAME,
                     'USER'=>'EMPLOYEE',
                     'DESIGNATION'=>Auth::user()->DESIGNATION,
                     'CAMPUS_ID'=>Auth::user()->CAMPUS_ID
@@ -124,6 +126,8 @@ class Employee extends Authenticatable
                   elseif(Auth::guard('t_student')->id()){
                 $details=[
                     'NAME'=>Auth::guard('t_student')->user()->NAME,
+                    'USER_NAME'=>Auth::guard('t_student')->user()->USER_NAME,
+                    'SURNAME'=>Auth::guard('t_student')->user()->SURNAME,
                     'USER'=>'STUDENT',
                     'GROUP'=>Auth::guard('t_student')->user()->GROUP_NAME,
                     'SUBJECT'=>Auth::guard('t_student')->user()->SUBJECT,
