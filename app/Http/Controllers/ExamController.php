@@ -74,6 +74,11 @@ class ExamController extends Controller
        $create=Response::queryResponse($request);
        return $create;
     }
+    public function getqueryResponse(Request $request)
+    {
+       $create=Response::getqueryResponse($request);
+       return $create;
+    }
     public function updatequeryResponse(Request $request)
     {
        $create=Response::updatequeryResponse($request);
