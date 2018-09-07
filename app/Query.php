@@ -41,7 +41,7 @@ class Query extends Model
    }
    public static function getqueryRise($data){
 
-   		$qdata=Query::where([
+   		$qdata=Query::select('query_id','query_text')->where([
 
    		'stud_id'=>Auth::user()->ADM_NO,
 
