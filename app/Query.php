@@ -2,6 +2,7 @@
 
 namespace App;
 use Auth;
+use App\Response;
 use Illuminate\Database\Eloquent\Model;
 
 class Query extends Model
@@ -10,6 +11,11 @@ class Query extends Model
    protected $primaryKey='query_id';
 
    protected $fillable=[ 'query_id', 'query_text', 'pointed_by', 'stud_id', 'exam_id', 'subject_id', 'pointed_to'];
+
+   public function response(){
+
+       return $this->hasMany('App\Response','query_id','query_id');
+   }
 
    public static function queryRise($data){
 
@@ -35,11 +41,12 @@ class Query extends Model
    }
    public static function getqueryRise($data){
 
-   		$qdata=Query::where([
+   		$qdata=Query::select('query_id','query_text')->where([
 
    		'stud_id'=>Auth::user()->ADM_NO,
 
-   	])->get();
+   	])->with('response')->get();
+
    	return [
                 'Login' => [
                     'response_message'=>"success",
