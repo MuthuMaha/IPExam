@@ -49,15 +49,15 @@ use Illuminate\Http\Request;
 
 		Route::post('rise_query', 'ExamController@queryRise');
 		Route::post('getqueryRise', 'ExamController@getqueryRise');
-		Route::put('rise_query', 'ExamController@updatequery');
-		Route::delete('rise_query', 'ExamController@deleteQuery');
+		// Route::put('rise_query', 'ExamController@updatequery');
+		Route::delete('rise_query/{Query_Id}', 'ExamController@deleteQuery');
 
 		//Response API
 
 		Route::post('query_response', 'ExamController@queryResponse');
 		Route::post('getqueryResponse', 'ExamController@getqueryResponse');
-		Route::put('query_response', 'ExamController@updatequeryResponse');
-		Route::delete('query_response', 'ExamController@deleteResponse');
+		// Route::put('query_response', 'ExamController@updatequeryResponse');
+		Route::delete('query_response/{Query_Id}', 'ExamController@deleteResponse');
 
 		//let these be here for sometime
 
