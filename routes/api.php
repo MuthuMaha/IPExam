@@ -57,7 +57,7 @@ use Illuminate\Http\Request;
 		Route::post('query_response', 'ExamController@queryResponse');
 		Route::post('getqueryResponse', 'ExamController@getqueryResponse');
 		// Route::put('query_response', 'ExamController@updatequeryResponse');
-		Route::delete('query_response/{Query_Id}', 'ExamController@deleteResponse');
+		Route::delete('query_response/{Response_Id}', 'ExamController@deleteResponse');
 
 		//let these be here for sometime
 

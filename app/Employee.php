@@ -232,7 +232,7 @@ class Employee extends Authenticatable
         else{
                 return [
                         'Login' => [
-                            'response_message'=>"error",
+                            'response_message'=>"error username or password wrong",
                             'response_code'=>"0"
                            ],
                     ];

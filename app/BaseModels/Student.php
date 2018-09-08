@@ -56,7 +56,7 @@ class Student extends Authenticatable
     }
 
     public static function profile($stud_id){
-    	return static::where('ADM_NO','=',$stud_id)->with('program','stream','class_year','campus','section','parent')->get();
+        return static::where('ADM_NO','=',$stud_id)->with('program','stream','class_year','campus','section','parent')->get();
 
     }
 
@@ -71,7 +71,13 @@ class Student extends Authenticatable
                     );   
         // }
  
-        return $query;
+       return [
+                        'Login' => [
+                            'response_message'=>"success",
+                            'response_code'=>"1",
+                            ],
+                            'Details'=>$query,
+                    ];
 
     }
 
@@ -82,10 +88,16 @@ class Student extends Authenticatable
 
             $yr = date("m-Y", $dateValue); 
                     $test_types=DB::table('0_test_types')->where('test_type_id',$data->test_type_id)->get();
-            		  $query[$test_types[0]->test_type_name] = DB::select("select ipd.Exam_name,ipd.exam_id,
+                      $query[$test_types[0]->test_type_name] = DB::select("select ipd.Exam_name,ipd.exam_id,
                          IF(ipd.path!='', 'True', 'False') as Is_Result_Uploaded from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from t_student t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id WHERE t.adm_no='".Auth::id()."') ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$data->test_type_id."' and ipd.Date_exam LIKE '%".$yr."'");   
  
-        return $query;
+       return [
+                        'Login' => [
+                            'response_message'=>"success",
+                            'response_code'=>"1",
+                            ],
+                            'Details'=>$query,
+                    ];
 
     }
 
