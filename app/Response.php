@@ -38,10 +38,32 @@ class Response extends Model
 
     $qdata=DB::table('IP_Queries as q')
 
-    ->select('q.query_id','q.query_text','q.pointed_by','q.stud_id','q.exam_id','q.subject_id','q.pointed_to','r.response_id','r.response_text','r.response_by')
+    ->select('r.response_id','r.response_text','r.response_by','q.query_id','q.query_text','q.pointed_by','q.stud_id','q.exam_id','q.subject_id','q.pointed_to')
     ->join('IP_Query_Response as r','r.query_id','=','q.query_id')
     ->where('r.response_by',Auth::user()->PAYROLL_ID)
     ->get();
+
+   return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Details'=>$qdata,
+            ];
+
+   }
+   public static function getqueryResponseList($data){
+
+  
+      $qdata=Query::select('query_id','query_text','stud_id','created_at')->where([
+
+                   'pointed_to'=>Auth::user()->PAYROLL_ID,
+
+                 ])->with(['student' => function($query) {
+                    $query->select('SURNAME','ADM_NO');
+                }])->with(['parent' => function($query) {
+                    $query->select('PARENT_NAME','ADM_NO');
+                }])->get();
 
    return [
                 'Login' => [

@@ -27,6 +27,11 @@ class Query extends Model
        return $this->hasMany('App\BaseModels\Parents','ADM_NO','stud_id');
    }
 
+   public function employee(){
+
+       return $this->hasMany('App\Employee','PAYROLL_ID','pointed_to');
+   }
+
    public static function queryRise($data){
 
    	$name=Parent_details::where('ADM_NO',Auth::id())->get();
@@ -68,14 +73,23 @@ class Query extends Model
    }
    public static function getqueryList($data){
 
-   		$qdata=Query::select('query_id','stud_id','created_at')->where([
+   		// $qdata=Query::select('query_id','stud_id','created_at')->where([
 
-               		'stud_id'=>Auth::user()->ADM_NO,
+     //           		'stud_id'=>Auth::user()->ADM_NO,
 
-               	])->with(['student' => function($query) {
+     //           	])->with(['student' => function($query) {
+     //                $query->select('SURNAME','ADM_NO');
+     //            }])->with(['parent' => function($query) {
+     //                $query->select('PARENT_NAME','ADM_NO');
+     //            }])->get();
+      $qdata=Query::select('query_id','query_text','stud_id','created_at','pointed_to')->where([
+
+                  'stud_id'=>Auth::user()->ADM_NO,
+
+                ])->with(['student' => function($query) {
                     $query->select('SURNAME','ADM_NO');
-                }])->with(['parent' => function($query) {
-                    $query->select('PARENT_NAME','ADM_NO');
+                }])->with(['employee' => function($query) {
+                    $query->select('SURNAME','PAYROLL_ID');
                 }])->get();
 
    	return [
