@@ -157,6 +157,10 @@ class ExamController extends Controller
       $result=Ipmpc::performancechart($request);
       return $result;
     }
+    public function performancemonth(Request $request){
+      $result=Ipmpc::performancemonth($request);
+      return $result;
+    }
    
     public function test_type(Request $request){
       $result=DB::table('0_test_types')->get();
