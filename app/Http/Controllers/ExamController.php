@@ -49,7 +49,7 @@ class ExamController extends Controller
     }
     public function deleteQuery(Request $request)
     {
-       $create=Query::where('query_id',$request->query_id)->delete();
+       $create=Query::where('query_id',$request->Query_Id)->delete();
           return [
                 'Login' => [
                     'response_message'=>"success",
@@ -158,11 +158,46 @@ class ExamController extends Controller
                 'Result'=>$result,
             ];
     }
-    public function result_details(Request $request){
-      $subjects=DB::table('0_subjects')->get();
+    public function result_details(Request $request)
+    {      
+      $check=DB::table('IP_Exam_Conducted_For as a')
+        ->join('t_course_group as b', 'a.group_id', '=', 'b.GROUP_ID')
+        ->select('b.GROUP_NAME')
+        ->where('a.exam_id',$request->EXAM_ID)
+        ->get();
+        if(!count($check)){
+          return "EXAM_ID WRONG";
+        }
+         $subjects=DB::table('0_subjects')->get();
+         foreach ($subjects as $key => $value) {
+          
+            if ($check[0]->GROUP_NAME='M.P.C')
+            {
+              $path=public_path().'/Result_sheet/MPC/'.$request->CAMPUS_ID.'/'.$request->EXAM_ID.'/'.$request->STUD_ID.'/'.$value->subject_id;
+            }
+            if ($check[0]->GROUP_NAME='BI.P.C')
+            {
+                 $path=public_path().'/Result_sheet/BIPC/'.$request->CAMPUS_ID.'/'.$request->EXAM_ID.'/'.$request->STUD_ID.'/'.$value->subject_id;
+            }
+            $subjects[$key]->{$value->subject_name}=glob($path."/*.{jpg,gif,png,bmp}",GLOB_BRACE);
+         }
+      // $result=Ipbpc::result_upload($request);
+     // return scandir($path);
+        // $result= [
+        //             'Login' => [
+        //                 'response_message'=>"success",
+        //                 'response_code'=>"1",
+        //                 ],
+        //             'Image_path'=>glob($path."/*.{jpg,gif,png,bmp}",GLOB_BRACE),
+        //          ];
+        // return $result;
+     
       $employeelist=Employee::select('DESIGNATION','PAYROLL_ID')
-                // ->where('PAYROLL_ID',Auth::id())
-                    ->distinct()
+                  ->where('PAYROLL_ID', '<>', 'null')
+                  ->where('DESIGNATION', '<>', '')
+                  ->where('CAMPUS_ID', '=', Auth::user()->CAMPUS_ID)
+                  ->distinct()
+                  // ->limit(10000)
                     ->get();
        return [
                 'Login' => [
@@ -170,6 +205,7 @@ class ExamController extends Controller
                     'response_code'=>"1",
                     ],
                 'Subjects'=>$subjects,
+                // 'Image_path'=>$Image_path,
                 'Employeelist'=>$employeelist,
             ];
     }

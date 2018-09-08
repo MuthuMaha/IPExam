@@ -36,9 +36,12 @@ class Response extends Model
 
    public static function getqueryResponse($data){
 
-    $qdata=DB::table('IP_Queries as q')->join('IP_Query_Response as r','r.query_id','=','q.query_id')->where('response_by',Auth::user()->PAYROLL_ID)
+    $qdata=DB::table('IP_Queries as q')
+    ->select('query_id','query_text','pointed_by','stud_id','exam_id','subject_id','pointed_to','response_id','response_text','response_by')
+    ->join('IP_Query_Response as r','r.query_id','=','q.query_id')
+    ->where('response_by',Auth::user()->PAYROLL_ID)
     ->get();
-    
+
    return [
                 'Login' => [
                     'response_message'=>"success",
