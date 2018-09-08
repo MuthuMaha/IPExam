@@ -38,9 +38,9 @@ class Response extends Model
 
     $qdata=DB::table('IP_Queries as q')
 
-    ->select('query_id','query_text','pointed_by','stud_id','exam_id','subject_id','pointed_to','response_id','response_text','response_by')
+    ->select('q.query_id','q.query_text','q.pointed_by','q.stud_id','q.exam_id','q.subject_id','q.pointed_to','r.response_id','r.response_text','r.response_by')
     ->join('IP_Query_Response as r','r.query_id','=','q.query_id')
-    ->where('response_by',Auth::user()->PAYROLL_ID)
+    ->where('r.response_by',Auth::user()->PAYROLL_ID)
     ->get();
 
    return [

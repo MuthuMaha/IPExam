@@ -49,6 +49,7 @@ use Illuminate\Http\Request;
 
 		Route::post('rise_query', 'ExamController@queryRise');
 		Route::post('getqueryRise', 'ExamController@getqueryRise');
+		Route::post('getqueryList', 'ExamController@getqueryList');
 		// Route::put('rise_query', 'ExamController@updatequery');
 		Route::delete('rise_query/{Query_Id}', 'ExamController@deleteQuery');
 

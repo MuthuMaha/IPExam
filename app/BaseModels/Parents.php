@@ -53,3 +53,4 @@ class Parents extends Model
                     ];
     }
 }
+}
