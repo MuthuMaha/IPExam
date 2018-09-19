@@ -1,7 +1,13 @@
 <?php
 
 namespace App\BaseModels;
-
+use Illuminate\Http\Request;
+use App\BaseModels\Student;
+use App\BaseModels\Parents;
+use App\Employee;
+use App\Http\Resources\Profile as ProfileResource;
+use App\Http\Resources\Parents as ParentResource;
+use App\Http\Resources\Employee as EmployeeResource;
 use Illuminate\Database\Eloquent\Model;
 
 class Parents extends Model
@@ -42,7 +48,7 @@ class Parents extends Model
                 ];
             }
         if($data->user_type=="employee"){
-         $result=new EmployeeResource(Employee::profile($data->USERID));
+         $result=new EmployeeResource(\App\Employee::profile($data->USERID));
 
           return [
                         'Login' => [

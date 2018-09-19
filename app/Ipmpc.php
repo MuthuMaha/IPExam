@@ -71,6 +71,8 @@ class Ipmpc extends Model
       $array=array();
       $result=array();
       $total_avg=array();
+      $total_pass_marks="";
+      $total_max_marks="";
 
       //fetch records from table
               $detail[]=DB::table('IP_MPC_Marks')->select('exam_id','PHYSICS','CHEMISTRY','MATHEMATICS','TOTAL','ENGLISH','GK','SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK','MATHEMATICS_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'M_RANK', 'P_RANK', 'C_RANK')
@@ -151,6 +153,25 @@ class Ipmpc extends Model
           $total_avg[$fetch_name[$k]]=($Avg/$f);
           $Avg=0;
         }
+       $sumArray=0;
+       $sumArray1=0;
+        foreach ($result as $k=>$subArray) {
+          foreach ($subArray as $id=>$value) {
+            $sumArray+=intval($value->max_marks);
+          }
+        }
+        foreach ($result as $k=>$subArray) {
+          foreach ($subArray as $id=>$value) {
+            if(isset($value->PHYSICS))
+            $sumArray1+=intval($value->PHYSICS);
+            if(isset($value->CHEMISTRY))
+            $sumArray1+=intval($value->CHEMISTRY);
+            if(isset($value->MATHEMATICS))
+            $sumArray1+=intval($value->MATHEMATICS);
+            if(isset($value->ENGLISH))
+            $sumArray1+=intval($value->ENGLISH);
+          }
+        }
         return   [
                     'Login' => [
                         'response_message'=>"success",
@@ -158,10 +179,19 @@ class Ipmpc extends Model
                         ],
                         'Result'=>$result,
                         'OverAll_Averages'=>$total_avg,
+                        'total'=>$total_pass_marks.'/'.$total_max_marks,
+                        'Add'=>$sumArray1.'/'.$sumArray,
                  ];
     }
     public static function performancechart($data){
-
+      if (!$data->test_type_id) {
+         return   [
+                    'Login' => [
+                        'response_message'=>"test_type_id is required",
+                        'response_code'=>"0",
+                        ],
+                      ];
+      }
       //declare the variables
       $test_type_id=array();
       $array=array();
@@ -221,7 +251,7 @@ class Ipmpc extends Model
                 ->join('IP_Test_Max_Marks as l','l.test_type_id','=','e.Test_type_id')
                 ->select(DB::raw("(s.".$a."/l.max_marks)*100 as Percentage,s.".$a.",l.max_marks,l.pass_marks"))
                 ->where("l.subject_id","=",$s[$value->Field][0]->subject_id)
-                // ->where("l.test_type_id","=",$data->test_type_id)
+                ->where("l.test_type_id","=",$data->test_type_id)
                
                 ->Where("s.STUD_ID","=",Auth::id())
               
@@ -242,17 +272,45 @@ class Ipmpc extends Model
           $total_avg[$fetch_name[$k]]=($Avg/$f);
           $Avg=0;
         }
+
+       $sumArray=0;
+       $sumArray1=0;
+        foreach ($result as $k=>$subArray) {
+          foreach ($subArray as $id=>$value) {
+            $sumArray+=intval($value->max_marks);
+          }
+        }
+        foreach ($result as $k=>$subArray) {
+          foreach ($subArray as $id=>$value) {
+            if(isset($value->PHYSICS))
+            $sumArray1+=intval($value->PHYSICS);
+            if(isset($value->CHEMISTRY))
+            $sumArray1+=intval($value->CHEMISTRY);
+            if(isset($value->MATHEMATICS))
+            $sumArray1+=intval($value->MATHEMATICS);
+            if(isset($value->ENGLISH))
+            $sumArray1+=intval($value->ENGLISH);
+          }
+        }
         return   [
                     'Login' => [
                         'response_message'=>"success",
                         'response_code'=>"1",
                         ],
-                        'Result'=>$result,
+                        // 'Result'=>$result,
                         'OverAll_Averages'=>$total_avg,
+                        'Total'=>$sumArray1.'/'.$sumArray,
                  ];
     }
     public static function performancemonth($data){
-
+       if (!$data->test_type_id) {
+         return   [
+                    'Login' => [
+                        'response_message'=>"test_type_id is required",
+                        'response_code'=>"0",
+                        ],
+                      ];
+      }
       //declare the variables
       $test_type_id=array();
       $array=array();
@@ -325,7 +383,7 @@ class Ipmpc extends Model
                 ->join('IP_Test_Max_Marks as l','l.test_type_id','=','e.Test_type_id')
                 ->select(DB::raw("(s.".$a."/l.max_marks)*100 as Percentage,s.".$a.",l.max_marks,l.pass_marks"))
                 ->where("l.subject_id","=",$s[$value->Field][0]->subject_id)
-                // ->where("l.test_type_id","=",$data->test_type_id)
+                ->where("l.test_type_id","=",$data->test_type_id)
                
                 ->Where("s.STUD_ID","=",Auth::id())
               
@@ -346,13 +404,34 @@ class Ipmpc extends Model
           $total_avg[$fetch_name[$k]]=($Avg/$f);
           $Avg=0;
         }
+
+       $sumArray=0;
+       $sumArray1=0;
+        foreach ($result as $k=>$subArray) {
+          foreach ($subArray as $id=>$value) {
+            $sumArray+=intval($value->max_marks);
+          }
+        }
+        foreach ($result as $k=>$subArray) {
+          foreach ($subArray as $id=>$value) {
+            if(isset($value->PHYSICS))
+            $sumArray1+=intval($value->PHYSICS);
+            if(isset($value->CHEMISTRY))
+            $sumArray1+=intval($value->CHEMISTRY);
+            if(isset($value->MATHEMATICS))
+            $sumArray1+=intval($value->MATHEMATICS);
+            if(isset($value->ENGLISH))
+            $sumArray1+=intval($value->ENGLISH);
+          }
+        }
         return   [
                     'Login' => [
                         'response_message'=>"success",
                         'response_code'=>"1",
                         ],
-                        'Result'=>$result,
+                        // 'Result'=>$result,
                         'OverAll_Averages'=>$total_avg,
+                        'Total'=>$sumArray1.'/'.$sumArray,
                  ];
     }
 }

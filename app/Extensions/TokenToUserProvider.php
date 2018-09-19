@@ -28,6 +28,9 @@ class TokenToUserProvider implements UserProvider
 		$uc=$this->token->where($identifier, $token)->where('created_at', '<', Carbon::now()->subDay())->delete();
   
 		$token = $this->token->with('user')->where($identifier, $token)->first();
+		if(!count($token)){
+			return null;
+		}
 		if(!$token->user){
 			if(!$token->student){
 			return $token && $token->user || $token->parent ? $token->parent : null;

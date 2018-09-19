@@ -61,7 +61,7 @@ class Handler extends ExceptionHandler
 
                 $response = [
                         'Login' => [
-                            'response_message'=>"error",
+                            'response_message'=>"session expired login again",
                             'response_code'=>"0"
                            ],
                     ];

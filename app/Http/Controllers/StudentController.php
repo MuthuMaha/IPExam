@@ -20,8 +20,6 @@ class StudentController extends Controller
         return $result;
         }
 
-    }
-
     public function written_tests(Request $request){
 
     	return Student::written_tests($request);
