@@ -3,6 +3,8 @@
 namespace App;
 use File;
 use DB;
+use Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Model;
 
 class Ipbipc extends Model
@@ -14,23 +16,54 @@ class Ipbipc extends Model
 
     public static function result_upload($data)
     {
+
+    	
+      $subject=DB::table('0_subjects')->where('subject_id',$data->SUBJECT_ID)->get();
+        $marks=Ipexammarks::updateOrCreate(
+          [
+          'CAMPUS_ID'=>$data->CAMPUS_ID, 
+          'STUD_ID'=>$data->STUD_ID,
+          'exam_id'=>$data->EXAM_ID,
+       	 ],[
+          strtoupper($subject[0]->subject_name)=>$data->mark,
+          // $subject[0]->subject_name=>$request->mark,
+        ]
+      )->get();
 	$check=DB::table('IP_Exam_Conducted_For as a')
 		->join('t_course_group as b', 'a.group_id', '=', 'b.GROUP_ID')
 		->select('b.GROUP_NAME')
 		->where('a.exam_id',$data->EXAM_ID)
 		->get();
+	// $subject=DB::table('0_subjects')->where('subject_name',Auth::user()->SUBJECT)->get();
+	if(!count($subject)){
+		  return [
+                'Login' => [
+                    'response_message'=>"login with Teacher Login ID",
+                    'response_code'=>"0",
+                    ],
+            ];
+
+
+	}
+	$q=str_replace(".","",$check[0]->GROUP_NAME);
+	// echo $q;
 	if ($check[0]->GROUP_NAME='M.P.C')
 	{
-	  $path=public_path().'/Result_sheet/MPC/'.$data->CAMPUS_ID.'/'.$data->EXAM_ID.'/'.$data->STUD_ID.'/'.$data->SUBJECT_ID;
+	  $path=public_path().'/Result_sheet/MPC/'.Auth::user()->CAMPUS_ID.'/'.$data->EXAM_ID.'/'.$data->STUD_ID.'/'.$subject[0]->subject_id;
 	}
 	if ($check[0]->GROUP_NAME='BI.P.C')
 	{
-		 $path=public_path().'/Result_sheet/BIPC/'.$data->CAMPUS_ID.'/'.$data->EXAM_ID.'/'.$data->STUD_ID.'/'.$data->SUBJECT_ID;
-	}	     
+		 $path=public_path().'/Result_sheet/BIPC/'.Auth::user()->CAMPUS_ID.'/'.$data->EXAM_ID.'/'.$data->STUD_ID.'/'.$subject[0]->subject_id;
+	}	
+	if($data->action==0){
+		// Storage::deleteDirectory($path);
+		array_map('unlink', glob($path."/*"));
+		rmdir($path);
+    	}     
 	File::isDirectory($path) or File::makeDirectory($path, 0777, true, true);
 	Ipexam::where('exam_id',$data->EXAM_ID)->update(['path'=>','.$path]);
 	$images=array();
-	if($files=$data->file('files'))
+	if($files=$data->file('scan_files'))
 	{
 	    foreach($files as $file){
 	        $name=rand().'.'.$file->getClientOriginalExtension();
@@ -38,7 +71,14 @@ class Ipbipc extends Model
 	        $images[]=$name;
 	    }
 	  }
-	     return ['success'=>['Message'=>'Result uploaded successfully']];
+	
+	   return [
+                'Login' => [
+                    'response_message'=>"success",
+                    'response_code'=>"1",
+                    ],
+                'Message'=>'Result uploaded successfully'
+            ];
 
 	   }
 }

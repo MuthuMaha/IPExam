@@ -78,11 +78,15 @@ class Employee extends Authenticatable
       if(Auth::id() || Auth::guard('t_student')->id()|| Auth::guard('tparent')->id()){
          $c=array();
             if(Auth::id()){
+                $client = Employee::find(Auth::id());
+                $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
+                
                 $details=[
                     'USER_NAME'=>Auth::user()->USER_NAME,
                     'SURNAME'=>Auth::user()->SURNAME,
                     'NAME'=>Auth::user()->NAME,
                     'USER'=>'EMPLOYEE',
+                    'DEPARTMENT'=>Auth::user()->SUBJECT,
                     'DESIGNATION'=>Auth::user()->DESIGNATION,
                     'CAMPUS_ID'=>Auth::user()->CAMPUS_ID
                           ];
@@ -99,8 +103,6 @@ class Employee extends Authenticatable
             }
             
             $token=Token::whereUser_id(Auth::id())->pluck('access_token');
-            $client = Employee::find(Auth::id());
-            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
            if($uc){
              $msg='Token expired and New Token generated';
            }
@@ -124,6 +126,8 @@ class Employee extends Authenticatable
             }
         }
                   elseif(Auth::guard('t_student')->id()){
+                    $client = Student::find(Auth::guard('t_student')->id());
+            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
                 $details=[
                     'NAME'=>Auth::guard('t_student')->user()->NAME,
                     'USER_NAME'=>Auth::guard('t_student')->user()->USER_NAME,
@@ -143,8 +147,6 @@ class Employee extends Authenticatable
                   ->select('roles.role')
                   ->get();
                    $token=Token::whereUser_id(Auth::guard('t_student')->id())->pluck('access_token');
-                    $client = Student::find(Auth::guard('t_student')->id());
-            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
               if($uc){
              $msg='Token expired and New Token generated';
            }
@@ -168,7 +170,8 @@ class Employee extends Authenticatable
             }
            }
            else{
-               
+                  $client = Tparent::find(Auth::guard('tparent')->id());
+            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
             $student=Parent_details::where('ADM_NO',Auth::guard('tparent')->id())->get();
              $details=[
                     'NAME'=>$student[0]->PARENT_NAME,
@@ -184,8 +187,7 @@ class Employee extends Authenticatable
                   ->select('roles.role')
                   ->get();
                    $token=Token::whereUser_id(Auth::guard('tparent')->id())->pluck('access_token');
-                    $client = Tparent::find(Auth::guard('tparent')->id());
-            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
+                 
               if($uc){
              $msg='Token expired and New Token generated';
            }

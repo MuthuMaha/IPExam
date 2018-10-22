@@ -60,7 +60,7 @@ $product ="";
                   ->first();
         if($request->usertype=="student")
             $user = \App\BaseModels\Student::where('ADM_NO', $request->PAYROLL_ID)
-                  // ->where('PASS_WORD',md5($request->PASS_WORD))
+                  ->where('PASS_WORD',md5($request->PASS_WORD))
                   ->first();
         // $token=Token::create([
         //     'user_id'=>$user->id,

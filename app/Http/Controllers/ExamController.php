@@ -5,6 +5,7 @@ use Auth;
 use Carbon\Carbon;
 use App\Employee;
 use App\Ipexam;
+use App\BaseModels\Campus;
 use App\Campusupload;
 use App\Ipbipc;
 use App\Ipmpc;
@@ -27,9 +28,14 @@ class ExamController extends Controller
 {
    
   
-    public function createIPExam(ExamValidation $request)
+    public function createIPExam(Request $request)
     {
        $create=Ipexam::ipcreate($request);
+       return $create;
+    } 
+    public function createIPExamname(Request $request)
+    {
+       $create=Ipexam::createIPExamname($request);
        return $create;
     } 
     public function queryRise(Request $request)
@@ -187,13 +193,15 @@ class ExamController extends Controller
           
             if ($check[0]->GROUP_NAME='M.P.C')
             {
-              $path=public_path().'/Result_sheet/MPC/'.$request->CAMPUS_ID.'/'.$request->EXAM_ID.'/'.$request->STUD_ID.'/'.$value->subject_id;
+              $path=public_path().'/Result_sheet/MPC/'.$request->CAMPUS_ID.'/'.$request->EXAM_ID.'/'.$request->USERNAME.'/'.$value->subject_id;
             }
             if ($check[0]->GROUP_NAME='BI.P.C')
             {
-                 $path=public_path().'/Result_sheet/BIPC/'.$request->CAMPUS_ID.'/'.$request->EXAM_ID.'/'.$request->STUD_ID.'/'.$value->subject_id;
+                 $path=public_path().'/Result_sheet/BIPC/'.$request->CAMPUS_ID.'/'.$request->EXAM_ID.'/'.$request->USERNAME.'/'.$value->subject_id;
             }
-            $subjects[$key]->{$value->subject_name}=glob($path."/*.{jpg,gif,png,bmp}",GLOB_BRACE);
+            // $subjects[$key]->{$value->subject_name}=scandir($path."/");  
+            $subjects[$key]->{'result_images'}=str_replace("/var/www/html/","http://175.101.3.68/",glob($path."/*.{jpg,gif,png,bmp}",GLOB_BRACE));  
+
          }
       // $result=Ipbpc::result_upload($request);
      // return scandir($path);
@@ -209,9 +217,9 @@ class ExamController extends Controller
       $employeelist=Employee::select('DESIGNATION','PAYROLL_ID')
                   ->where('PAYROLL_ID', '<>', 'null')
                   ->where('DESIGNATION', '<>', '')
-                  ->where('CAMPUS_ID', '=', Auth::user()->CAMPUS_ID)
-                  ->distinct()
-                  // ->limit(10000)
+                  ->where('CAMPUS_ID', '=', $request->CAMPUS_ID)
+                  ->distinct('DESIGNATION')
+                  ->limit(100)
                     ->get();
        return [
                 'Login' => [
@@ -222,6 +230,110 @@ class ExamController extends Controller
                 // 'Image_path'=>$Image_path,
                 'Employeelist'=>$employeelist,
             ];
+    }
+    public function ipview(Request $request)
+    {
+       $examlist=Ipexam::join('0_test_types as b','IP_Exam_Details.Test_type_id','=','b.test_type_id')
+                // ->select('IP_Exam_Details.Date_exam','IP_Exam_Details.Exam_name','IP_Exam_Details.End_Date','IP_Exam_Details.last_date_to_upload','b.test_type_name','IP_Exam_Details.Board')
+                ->with('conduct')
+                ->paginate(10);
+                  return $examlist;
+    }
+  public function examlist(Request $request)
+    {
+        if($request->year!='' && $request->group!='' && $request->stream!='' && $request->program!='' && $request->status!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->where('b.classyear_id',$request->year)
+                  ->where('b.group_id',$request->group)
+                  ->where('b.stream_id',$request->stream)
+                  ->where('b.program_id',$request->program)
+                  ->where('c.status',$request->status)
+                  ->paginate(10);
+        }
+        elseif($request->year!='' && $request->group!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->where('b.classyear_id',$request->year)
+                  ->where('b.group_id',$request->group)
+                  ->paginate(10);
+        }
+        elseif($request->group!='' && $request->stream!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')                  
+                  ->where('b.group_id',$request->group)
+                  ->where('b.stream_id',$request->stream)
+                  ->paginate(10);
+        }
+        elseif($request->stream!='' && $request->program!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->where('b.stream_id',$request->stream)
+                  ->where('b.program_id',$request->program)
+                  ->paginate(10);
+        }
+        elseif($request->program!='' && $request->status!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->where('b.program_id',$request->program)
+                  ->where('c.status',$request->status)
+                  ->paginate(10);
+        }
+        elseif($request->year!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->where('b.classyear_id',$request->year)
+                  ->paginate(10);
+        }
+        elseif($request->group!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                   ->where('b.group_id',$request->group)
+                  ->paginate(10);
+        }
+        elseif($request->stream!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                   ->where('b.stream_id',$request->stream)
+                  ->paginate(10);
+        }
+        elseif($request->program!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                   ->where('b.program_id',$request->program)                  
+                  ->paginate(10);
+        }
+        elseif($request->status!=''){
+           $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                   ->where('c.status',$request->status)                  
+                  ->paginate(10);
+        }
+        else{
+           $examlist=Ipexam::paginate(10);
+        }
+       return $examlist;
+    }
+  public function sectionlist(Request $request)
+    {
+      if($request->campus_id==0){
+      $examlist=Campus::with('section','city','state','district')
+                    ->where('present_status','LIVE')
+                    ->paginate(7);
+                }
+      if($request->campus_id!=0){
+       $examlist=Campus::with('section','city','state','district')
+              ->where('CAMPUS_ID',$request->campus_id)
+                    ->where('present_status','LIVE')
+              ->paginate(7);
+      }
+
+      $campus=Campus::select('CAMPUS_ID')->orderby('CAMPUS_ID','ASC')
+                    ->where('present_status','LIVE')->get();
+       return [
+        'exam'=>$examlist,
+        'campus'=>$campus,
+      ];
     }
    
 }

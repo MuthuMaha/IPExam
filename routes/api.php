@@ -12,19 +12,33 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!muthu
 |
 */
-	Route::post('auth-attempt', 'EmployeeController@empshow');
+		Route::post('auth-attempt', 'EmployeeController@empshow');
+		
+		Route::get('employeelist', 'EmployeeController@emplist');
+		Route::get('examlist', 'ExamController@examlist');
+		Route::get('sectionlist', 'ExamController@sectionlist');
+		Route::get('subjectlist', 'SubjectController@sublist');
+		Route::get('studlist', 'SubjectController@studlist');
+		Route::get('updatemanage', 'SubjectController@updatemanage');
+		Route::get('notify', 'SubjectController@notify');
+		Route::post('subjectadd', 'SubjectController@subadd');
+		Route::post('subjectup', 'SubjectController@subupdate');
+		Route::post('subjectdel', 'SubjectController@subdelete');
 
-	Route::group([ 'middleware' => 'auth:token' ], function () {
 		//IP Exam CRUD 
 
 		Route::post('ip-create', 'ExamController@createIPExam');
+		Route::post('ip-name', 'ExamController@createIPExamname');
 		Route::delete('ip-delete/{id}', 'ExamController@ipdelete');
-		Route::put('edit_exam/{id}', 'ExamController@editExam');
-		Route::get('edit_exam_details/{id}', 'ExamController@ipUpdate');
-		// Route::post('ip-view', 'ExamController@ipview');
+		Route::post('edit_exam', 'ExamController@editExam');
+		Route::get('edit_exam_details', 'ExamController@ipUpdate');
+		// Route::get('edit_ip_view/{id}', 'ExamController@ipUpdate');
+		Route::post('ip-view', 'ExamController@ipview');
 		Route::post('edit_exam_details/{id}', 'ExamController@examdetailcreate');
 		Route::put('edit_exam_details/{id}/{e_id}', 'ExamController@ipeditexamdetails');
-		Route::delete('edit_exam_details/{id}/{e_id}', 'ExamController@deleteexamdetails');
+		Route::delete('edit_exam_details/{e_id}', 'ExamController@deleteexamdetails');
+
+	Route::group([ 'middleware' => 'auth:token' ], function () {
 
 		//BIPC_MPC
 
@@ -43,7 +57,7 @@ use Illuminate\Http\Request;
 		//Result Image CRUD
 
 		Route::post('result_upload', 'ExamController@mpc');
-		Route::delete('deleteresultimages','ExamController@deleteresult');
+		Route::post('deleteresultimages','ExamController@deleteresult');
 		Route::post('resultimagesview','ExamController@resultimagesview');
 
 		//Query API
@@ -68,6 +82,11 @@ use Illuminate\Http\Request;
 		Route::get('class_years/{group_id}','BaseController@class_year_wrt_group');
 		Route::get('streams/{group_id}/{class_id}','BaseController@stream_wrt_group_class_year');
 		Route::get('programs/{stream_id}/{class_id}','BaseController@programs_wrt_stream_class_year');
+		Route::get('sections/{program_id}/{stream_id}/{class_id}','BaseController@sections_programs_wrt_stream_class_year');
+		Route::post('student_upload','BaseController@student_upload');
+		Route::post('exam_upload_details','BaseController@exam_upload_details');
+		Route::post('upload_marks','BaseController@student_upload_marks');
+
 
 		//student Login Api's 
 

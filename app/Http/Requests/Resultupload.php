@@ -24,11 +24,11 @@ class Resultupload extends FormRequest
     public function rules()
     {
         return [
-            'files'=>'required',
-            'CAMPUS_ID'=>'required | integer ',
+            'scan_files'=>'required',
+            // 'CAMPUS_ID'=>'required | integer ',
             'EXAM_ID'=>'required | integer ',
             'STUD_ID'=>'required | integer ',
-            'SUBJECT_ID'=>'required | integer',
+            // 'SUBJECT_ID'=>'required | integer',
         ];
     }
 
