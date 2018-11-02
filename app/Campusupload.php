@@ -1,6 +1,7 @@
 <?php
 
 namespace App;
+use App\BaseModels\Campus;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -91,5 +92,106 @@ class Campusupload extends Model
       }
       return ['success'=>['Message'=>'Not Deleted because of some result upload']];
 
+   }
+   public static function sectionlist($data){
+       // $this->objFoo->exam_id = $data->exam_id;
+                    $value=array();
+                    $cond=DB::table('IP_Exam_Conducted_For')
+                              ->where('exam_id',$data->exam_id)
+                              ->get();
+                              $exam_id=$data->exam_id;
+      if($data->campus_id==0)
+     { 
+                    foreach ($cond as $key => $value) {
+                      $g=$value->group_id;
+                      $c=$value->classyear_id;
+                      $s=$value->stream_id;
+                      $p=$value->program_id;
+
+                    $examlist[$key]=Campus::
+                    // ->select('t_campus.CAMPUS_ID','b.SECTION_ID')
+                    with('city','state','district')
+                   ->with(['section'=>function($q) use ($g,$c,$s,$p){
+
+                    $q->where('c.GROUP_ID',$g);
+                    $q->where('c.CLASS_ID',$c);
+                    $q->where('c.STREAM_ID',$s);
+                    $q->where('SECTION_NAME','!=','NOT_ALLOTTED');
+                    $q ->orderby('SECTION_ID','ASC');
+                    // $q->distinct();
+                    // $q->where('t_college_section.PROGRAM_ID',$p);  
+                    }])
+                   ->with(['check'=>function($q) use ($exam_id){
+                    $q->where('exam_id',$exam_id);
+                   }])
+                    ->where('present_status','LIVE')
+
+                    ->distinct()
+                    ->paginate(20);
+
+                    }
+                }
+      if($data->campus_id!=0)
+      {
+
+                    foreach ($cond as $key => $value) {
+
+                      $g=$value->group_id;
+                      $c=$value->classyear_id;
+                      $s=$value->stream_id;
+                      $p=$value->program_id;
+                    $examlist[$key]=Campus::
+                    // ->select('t_campus.CAMPUS_ID','b.SECTION_ID')
+                    with('city','state','district')
+                   ->with(['section'=>function($q) use ($g,$c,$s,$p){
+
+                    $q->where('c.GROUP_ID',$g);
+                    $q->where('c.CLASS_ID',$c);
+                    $q->where('c.STREAM_ID',$s);
+                    $q->where('SECTION_NAME','!=','NOT_ALLOTTED');
+                    $q ->orderby('SECTION_ID','ASC');
+                    // $q->distinct();
+                    // $q->where('t_college_section.PROGRAM_ID',$p);  
+                    }])
+                   ->with(['check'=>function($q) use ($exam_id){
+                    $q->where('exam_id',$exam_id);
+                   }])
+              ->where('CAMPUS_ID',$data->campus_id)
+                    ->where('present_status','LIVE')
+
+                    ->distinct()
+                    ->paginate(20);
+
+                    }
+
+      }
+         foreach ($cond as $key => $value) {
+
+                      $g=$value->group_id;
+                      $c=$value->classyear_id;
+                      $s=$value->stream_id;
+                      $p=$value->program_id;
+      $campus=Campus::with('city','state','district')
+                      ->select('CAMPUS_ID')
+                      ->with(['section'=>function($q) use ($g,$c,$s,$p){
+                    $q->where('c.GROUP_ID',$g);
+                    $q->where('c.CLASS_ID',$c);
+                    $q->where('c.STREAM_ID',$s);
+                    $q->where('SECTION_NAME','!=','NOT_ALLOTTED');
+                      $q ->orderby('SECTION_ID','ASC');
+                    // $q->distinct();
+                    // $q->where('t_college_section.PROGRAM_ID',$p);  
+                    }])
+                   ->with(['check'=>function($q) use ($exam_id){
+                    $q->where('exam_id',$exam_id);
+                   }])
+                    ->orderby('CAMPUS_ID','ASC')
+                    ->where('present_status','LIVE')
+                    ->get();
+                  }
+       return [
+        'exam'=>$examlist,
+        'campus'=>$campus,
+      ];
    }
 }

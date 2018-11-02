@@ -58,10 +58,12 @@ $product ="";
          $user = \App\Employee::where('PAYROLL_ID', $request->PAYROLL_ID)
                   ->where('PASS_WORD',md5($request->PASS_WORD))
                   ->first();
+                  // $user=DB::select("select * from t_employee where PAYROLL_ID='".$request->PAYROLL_ID."' and PASS_WORD='".$request->PASS_WORD."'");
         if($request->usertype=="student")
             $user = \App\BaseModels\Student::where('ADM_NO', $request->PAYROLL_ID)
                   ->where('PASS_WORD',md5($request->PASS_WORD))
                   ->first();
+                  // $user=DB::select("select * from t_student where ADM_NO='".$request->PAYROLL_ID."' and PASS_WORD='".$request->PASS_WORD."'");
         // $token=Token::create([
         //     'user_id'=>$user->id,
         //     'expiry_time'=>'1',

@@ -1,17 +1,31 @@
 <?php
 
 namespace App\BaseModels;
-
+use DB;
+// use App\BaseModels\Student;
 use Illuminate\Database\Eloquent\Model;
 
 class Campus extends Model
 {
     //
+     protected $exam_id;
         protected $table = 't_campus';
     	protected $primaryKey = 'CAMPUS_ID';
     public function section()
     {
-        return $this->hasMany('App\BaseModels\Section','CAMPUS_ID', 'CAMPUS_ID');
+        return $this->hasMany('App\BaseModels\Section','CAMPUS_ID', 'CAMPUS_ID')
+                    ->join('t_course_track as c','c.COURSE_TRACK_ID','t_college_section.COURSE_TRACK_ID')
+                    ->whereExists(function($query)
+                        {
+                            $query->select(DB::raw(1))
+                                  ->from('t_student')
+                                  ->whereRaw('t_student.SECTION_ID = t_college_section.SECTION_ID');
+                        });
+                    // ->join('t_student as d','d.SECTION_ID','t_college_section.SECTION_ID');
+                    // ->where('SECTION_ID', '=', \App\BaseModels\Student::select('SECTION_ID'));
+                    // where('email', '=', Input::get('email'))->first()
+                    // ->join('IP_Campus_Uploads as b','b.section_id','t_college_section.SECTION_ID');
+                    // ->where('STATUS','=','1');
     }
 
     public function district()
@@ -25,6 +39,10 @@ class Campus extends Model
     public function city()
     {
         return $this->hasOne('App\BaseModels\City','CITY_ID', 'CITY_ID');
+    }
+    public function check()
+    {
+        return $this->hasMany('App\Campusupload','CAMPUS_ID','CAMPUS_ID');
     }
 
 }

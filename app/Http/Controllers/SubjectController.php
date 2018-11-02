@@ -5,6 +5,7 @@ use DB;
 use App\Ipsection;
 use App\Ipexammarks;
 use App\Student;
+use App\Campusupload;
 use Illuminate\Http\Request;
 
 class SubjectController extends Controller
@@ -81,14 +82,20 @@ class SubjectController extends Controller
                ];
     }
     public function updatemanage(Request $request){
-
+      
       $arr=['PHYSICS','CHEMISTRY','MATHEMATICS','BIOLOGY','BOTANY','ZOOLOGY','ENGLISH','GK'];
- if($request->check=='all' && $request->SECTION_ID!="")
+ if($request->check=='all')
  {
       $student=DB::table('t_student')->where('SECTION_ID',$request->SECTION_ID)->get();
 
   foreach ($student as $key => $value) 
   {
+      $upload=Campusupload::updateorcreate([
+          'CAMPUS_ID'=>$request->CAMPUS_ID,
+          'section_id'=>$value->SECTION_ID,
+          'exam_id'=>$request->EXAM_ID,
+          'status'=>'0'
+        ]);
         $create=Ipexammarks::updateorcreate([
           'CAMPUS_ID'=>$request->CAMPUS_ID,
           'STUD_ID'=>$value->ADM_NO,
@@ -104,8 +111,10 @@ class SubjectController extends Controller
           'GK'=>'AB',
         ]);
 
-  }}
-      if(!isset($request->sl)){
+  }
+  // return $student;
+}
+      else{
         $create=Ipexammarks::updateorcreate([
           'CAMPUS_ID'=>$request->CAMPUS_ID,
           'STUD_ID'=>$request->STUD_ID,
@@ -137,7 +146,7 @@ class SubjectController extends Controller
                  ->update([$arr[$i]=>'AB']); 
        }
              }
-      return $request->sl;
+      return $request;
 
     }
     public function notify(Request $request){
@@ -148,7 +157,7 @@ class SubjectController extends Controller
       {
 
          $res=DB::table('IP_Exam_Marks') 
-                 ->where($arr[$i],'')
+                 ->where($arr[$i],'0.00')
                  ->get(); 
 
         if(count($res)!=0)
@@ -164,20 +173,21 @@ class SubjectController extends Controller
       {
 
         $subject[]=DB::table('0_subjects as a')
-                    ->join('IP_Exam_Section as b','a.subject_id','=','b.SUBJECT_ID')
-                    ->join('t_employee as c','b.EMPLOYEE_ID','c.PAYROLL_ID')
+                    ->leftjoin('IP_Exam_Section as b','a.subject_id','=','b.SUBJECT_ID')
+                    ->leftjoin('t_employee as c','b.EMPLOYEE_ID','c.PAYROLL_ID')
                     ->select('c.MOBILENO','c.PAYROLL_ID')
                     ->where('a.subject_name',$a[$i])
                     ->where('b.SECTION_ID',$request->SECTION_ID)
                     ->get();
-      }
-
       $res=DB::table('t_student as a')
-            ->join('IP_Exam_Marks as b','a.ADM_NO','=','b.STUD_ID')
+            ->leftjoin('IP_Exam_Marks as b','a.ADM_NO','=','b.STUD_ID')
             ->where('a.SECTION_ID','=',$request->SECTION_ID)
-            ->where('b.exam_id','=',$request->exam_id)
+            // ->where('b.exam_id','=',$request->exam_id)
+            ->where('b.'.$a[$i],'=','0.00')
             ->select('a.ADM_NO','a.NAME','b.PHYSICS','b.CHEMISTRY','b.MATHEMATICS','b.BIOLOGY','b.BOTANY','b.ZOOLOGY','b.ENGLISH','b.GK')
             ->get();
+      }
+
       return [
               'Subject'=>$subject,
               'Result'=>$res,

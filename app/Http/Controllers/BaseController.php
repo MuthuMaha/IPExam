@@ -275,6 +275,8 @@ class BaseController extends Controller
 
     }
     public function exam_upload_details(Request $request){
+      $data1="";
+       $query['Test']=array();
          // $test_types=DB::table('0_test_types')->where('test_type_id',$request->test_type_id)->get();
      //    foreach($test_types as $value){
       $section=$this->sections_programs_wrt_stream_class_year($request)["Data"];
@@ -282,8 +284,9 @@ class BaseController extends Controller
            return [
                         'Login' => [
                             'response_message'=>"No record found check your login ID",
-                            'response_code'=>"0",
+                            'response_code'=>"1",
                             ],
+                            'Details'=>$query,
                     ];
       }
       $a=0;
@@ -302,7 +305,7 @@ class BaseController extends Controller
         $group_id= $request->group_id;
         // $section_id= $request->section_id;
         for ($i=0; $i <=count($section) ; $i++) { 
-         
+         if(isset($section[$i]->section_name))
        $data1=DB::table('t_student as a')
                 ->join('t_course_group as b','a.GROUP_NAME','=','b.GROUP_NAME')
                 ->join('t_college_section as c','c.section_id','a.SECTION_ID')
@@ -315,6 +318,15 @@ class BaseController extends Controller
                 ->select('a.ADM_NO','a.NAME','a.GROUP_NAME')
                 ->get();
                 $hold+=count($data1);
+                if(!count($data1)){
+           return [
+                        'Login' => [
+                            'response_message'=>"No record found check your login ID",
+                            'response_code'=>"1",
+                            ],
+                            'Details'=>$query,
+                    ];
+      }
                 // $chek+=count($data1);
         }
              $data=DB::table('t_student as a')
@@ -328,6 +340,15 @@ class BaseController extends Controller
                 ->where('a.CAMPUS_ID',Auth::user()->CAMPUS_ID)
                 ->select('a.ADM_NO','a.NAME','a.GROUP_NAME')
                 ->get();
+                if(!count($data)){
+           return [
+                        'Login' => [
+                            'response_message'=>"No record found check your login ID",
+                            'response_code'=>"1",
+                            ],
+                            'Details'=>$query,
+                    ];
+      }
           $query['Test'] = DB::select("select DISTINCT ipd.Exam_name,ipd.Exam_id from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from t_student t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id) ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$request->test_type_id."'"
                     );   
 
@@ -335,8 +356,9 @@ class BaseController extends Controller
             return [
                         'Login' => [
                             'response_message'=>"No record found",
-                            'response_code'=>"0",
+                            'response_code'=>"1",
                             ],
+                            'Details'=>$query,
                     ];
                 foreach ($query['Test'] as $key1 => $value1) 
                  {

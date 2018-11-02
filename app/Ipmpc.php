@@ -46,18 +46,31 @@ class Ipmpc extends Model
                         'response_message'=>"success",
                         'response_code'=>"1",
                         ],
-                    'Image_path'=>str_replace("/var/www/html/","http://175.101.3.68/",glob($path."/*.{jpg,gif,png,bmp}",GLOB_BRACE)),
+                    'Image_path'=>str_replace("/var/www/html/","http://103.206.115.37/",glob($path."/*.{jpg,gif,png,bmp}",GLOB_BRACE)),
                  ];
         return $result;
     }
     public static function deleteresult($data){
+
+      $subject=DB::table('0_subjects')->where('subject_id',$data->SUBJECT_ID)->get();
+        $marks=Ipexammarks::updateOrCreate(
+          [
+          'CAMPUS_ID'=>$data->CAMPUS_ID, 
+          'STUD_ID'=>$data->STUD_ID,
+          'exam_id'=>$data->EXAM_ID,
+         ],
+         [
+          strtoupper($subject[0]->subject_name)=>$data->mark,
+        ]
+      )->get();
+
       $error=array();
        $path=$data->paths;
        $res=explode(",", $path);
      
         foreach($res as $item=>$value):
             $g=str_replace('"', "", $value);
-            $h=str_replace("http://175.101.3.68/","/var/www/html/",$g);
+            $h=str_replace("http://103.206.115.37/","/var/www/html/",$g);
             // return $h;
           if(File::exists($h)){
              unlink($h);
@@ -92,23 +105,29 @@ class Ipmpc extends Model
               ->where('STUD_ID','=',$data->STUD_ID)
               ->where('exam_id','=',$data->EXAM_ID)
               ->get();
+
       if(!isset($data->STUD_ID))
               $detail[]=DB::table('IP_Exam_Marks')
               ->select('exam_id','PHYSICS', 'CHEMISTRY', 'MATHEMATICS','BIOLOGY', 'BOTANY', 'ZOOLOGY', 'ENGLISH', 'GK', 'SEC_RANK', 'CAMP_RANK', 'CITY_RANK', 'DISTRICT_RANK', 'STATE_RANK', 'ALL_INDIA_RANK', 'PHYSICS_RANK', 'CHEMISTRY_RANK', 'BIOLOGY_RANK', 'BOTANY_RANK', 'ZOOLOGY_RANK', 'ENGLISH_RANK','MATHEMATICS_RANK', 'GK_RANK', 'M_RANK', 'P_RANK', 'C_RANK','MAT1', 'MAT2', 'MAT3', 'PHY1', 'PHY2', 'CHE1', 'CHE2', 'REG_RANK')
               ->where('STUD_ID','=',Auth::id())
               ->where('exam_id','=',$data->EXAM_ID)
               ->get();
+              
               if(count($detail[0])==0)
               {
+                $result[0]="";
+                 $total_avg["subject_name"]=array();
+                  $total_avg["subject_percentage"]=array();
+                  $total_avg["subject_marks"]=array();
                 return [
                     'Login' => [
                         'response_message'=>"error student record mot match with our record",
                         'response_code'=>"0",
                         ],
                         'Result'=>'No result',
-                        'OverAll_Averages'=>"No result found",
-                        'total'=>'',
-                        'Add'=>'',
+                        'OverAll_Averages'=>$total_avg,
+                        'total'=>'0/0',
+                        'Add'=>'0/0',
                       ];
               }
       //Fetch column name  
@@ -143,17 +162,7 @@ class Ipmpc extends Model
                   }
                   if (array_key_exists($value->Field,$s)){
                     $fetch_name[]=$value->Field;
-              if(!isset($data->STUD_ID))
-              $result[]=DB::
-                table('IP_Exam_Marks as s')
-                ->join('IP_Exam_Details as e','e.exam_id','=','s.exam_id')
-                ->join('IP_Test_Max_Marks as l','l.test_type_id','=','e.Test_type_id')
-                ->select(DB::raw("(s.".$a."/l.max_marks)*100 as Percentage,s.".$a.",l.max_marks,l.pass_marks"))
-                ->where("l.subject_id","=",$s[$value->Field][0]->subject_id)
-                ->where("l.test_type_id","=",$data->test_type_id)
-                ->where("e.exam_id","=",$data->EXAM_ID)               
-                ->Where("s.STUD_ID","=",Auth::id())              
-                ->get();
+
               if(isset($data->STUD_ID))
               $result[]=DB::
                 table('IP_Exam_Marks as s')
@@ -165,8 +174,18 @@ class Ipmpc extends Model
                 ->where("e.exam_id","=",$data->EXAM_ID)               
                 ->Where("s.STUD_ID","=",$data->STUD_ID)              
                 ->get();
+              if(!isset($data->STUD_ID))
+              $result[]=DB::
+                table('IP_Exam_Marks as s')
+                ->join('IP_Exam_Details as e','e.exam_id','=','s.exam_id')
+                ->join('IP_Test_Max_Marks as l','l.test_type_id','=','e.Test_type_id')
+                ->select(DB::raw("(s.".$a."/l.max_marks)*100 as Percentage,s.".$a.",l.max_marks,l.pass_marks"))
+                ->where("l.subject_id","=",$s[$value->Field][0]->subject_id)
+                ->where("l.test_type_id","=",$data->test_type_id)
+                ->where("e.exam_id","=",$data->EXAM_ID)               
+                ->Where("s.STUD_ID","=",Auth::id())              
+                ->get();
               }
-                
 
         }
        

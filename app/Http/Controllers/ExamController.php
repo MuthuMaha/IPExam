@@ -22,11 +22,18 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\EmployeeCollection;
 use App\Http\Resources\ExamCollection;
 use Illuminate\Database\Eloquent\Builder;
+// use  App\BaseModels\Campus;
 use DB;
 use File;
 class ExamController extends Controller
 {
-   
+    private $objFoo;
+
+
+     public function __construct(Campus $foo){
+         $this->objFoo = $foo;
+     }
+
   
     public function createIPExam(Request $request)
     {
@@ -137,7 +144,7 @@ class ExamController extends Controller
     $result_store=Campusupload::result_delete($request);
     return $result_store;
     }
-    public function mpc(Resultupload $request){
+    public function mpc(Request $request){
 
       $result=Ipbipc::result_upload($request);
      return $result;
@@ -243,97 +250,92 @@ class ExamController extends Controller
     {
         if($request->year!='' && $request->group!='' && $request->stream!='' && $request->program!='' && $request->status!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
                   ->where('b.classyear_id',$request->year)
                   ->where('b.group_id',$request->group)
                   ->where('b.stream_id',$request->stream)
                   ->where('b.program_id',$request->program)
                   ->where('c.status',$request->status)
-                  ->paginate(10);
+                  ->distinct()
+                  ->paginate(6);
         }
         elseif($request->year!='' && $request->group!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
                   ->where('b.classyear_id',$request->year)
                   ->where('b.group_id',$request->group)
-                  ->paginate(10);
+                  ->distinct()
+                  ->paginate(6);
         }
         elseif($request->group!='' && $request->stream!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')                  
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')                  
                   ->where('b.group_id',$request->group)
                   ->where('b.stream_id',$request->stream)
-                  ->paginate(10);
+                  ->distinct()
+                  ->paginate(6);
         }
         elseif($request->stream!='' && $request->program!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
                   ->where('b.stream_id',$request->stream)
                   ->where('b.program_id',$request->program)
-                  ->paginate(10);
+                  ->distinct()
+                  ->paginate(6);
         }
         elseif($request->program!='' && $request->status!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
                   ->where('b.program_id',$request->program)
                   ->where('c.status',$request->status)
-                  ->paginate(10);
+                  ->distinct()
+                  ->paginate(6);
         }
         elseif($request->year!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
                   ->where('b.classyear_id',$request->year)
-                  ->paginate(10);
+                  ->distinct()
+                  ->paginate(6);
         }
         elseif($request->group!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
                    ->where('b.group_id',$request->group)
-                  ->paginate(10);
+                   ->distinct()
+                  ->paginate(6);
         }
         elseif($request->stream!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
                    ->where('b.stream_id',$request->stream)
-                  ->paginate(10);
+                   ->distinct()
+                  ->paginate(6);
         }
         elseif($request->program!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
-                   ->where('b.program_id',$request->program)                  
-                  ->paginate(10);
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                   ->where('b.program_id',$request->program)  
+                   ->distinct()                
+                  ->paginate(6);
         }
         elseif($request->status!=''){
            $examlist=Ipexam::join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
-                   ->where('c.status',$request->status)                  
-                  ->paginate(10);
+                  ->leftjoin('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+                   ->where('c.status',$request->status)   
+                   ->distinct()               
+                  ->paginate(6);
         }
         else{
-           $examlist=Ipexam::paginate(10);
+           $examlist=Ipexam::paginate(6);
         }
        return $examlist;
     }
-  public function sectionlist(Request $request)
-    {
-      if($request->campus_id==0){
-      $examlist=Campus::with('section','city','state','district')
-                    ->where('present_status','LIVE')
-                    ->paginate(7);
-                }
-      if($request->campus_id!=0){
-       $examlist=Campus::with('section','city','state','district')
-              ->where('CAMPUS_ID',$request->campus_id)
-                    ->where('present_status','LIVE')
-              ->paginate(7);
-      }
 
-      $campus=Campus::select('CAMPUS_ID')->orderby('CAMPUS_ID','ASC')
-                    ->where('present_status','LIVE')->get();
-       return [
-        'exam'=>$examlist,
-        'campus'=>$campus,
-      ];
+  public function sectionlist(Request $request)
+    {          
+      $result=Campusupload::sectionlist($request);
+      return $result;
     }
    
 }

@@ -269,17 +269,17 @@ class Ipexam extends Model
       
       //$stream1=$pro[1];
       if(count($pro)){
-      if($pro[1]=="ICON")
-      {
-        $pro[1]="IIT";
-        $str=implode("_",$pro);
-        $program=$str;
+      // if($pro[1]=="ICON")
+      // {
+      //   $pro[1]="IIT";
+      //   $str=implode("_",$pro);
+      //   $program=$str;
 
-      }
-      else
-      {
+      // }
+      // else
+      // {
         $program=$program_name;
-      }
+      // }
       }
       $test_code = $program.'_'.$fifth;
     }
