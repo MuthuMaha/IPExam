@@ -28,6 +28,7 @@ class Parents extends Model
     public static function profile_details($data){
         
         if($data->user_type=="student"){
+            // usleep(3);
         $result=new ProfileResource(Student::profile($data->USERID));
          return [
                     'Login' => [

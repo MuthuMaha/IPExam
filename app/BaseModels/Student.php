@@ -57,7 +57,9 @@ class Student extends Authenticatable
     }
 
     public static function profile($stud_id){
-        return static::where('ADM_NO','=',$stud_id)->with('program','stream','class_year','campus','section','parent')->get();
+        return static::from(\DB::raw('t_student USE INDEX(ADM_NO)'))->where('ADM_NO','=',$stud_id)
+        // ->with('program','stream','class_year','campus','section','parent')
+        ->get();
 
     }
 
@@ -79,7 +81,8 @@ class Student extends Authenticatable
                     ];
 
         // }
-          for ($i=0; $i <=count($query); $i++) { 
+
+          for ($i=0; $i <=count($query['Test'])-1; $i++) { 
 
           $object = new \stdClass(); 
           $object->EXAM_ID = $query['Test'][$i]->Exam_id;

@@ -15,12 +15,18 @@ class Campus extends Model
     {
         return $this->hasMany('App\BaseModels\Section','CAMPUS_ID', 'CAMPUS_ID')
                     ->join('t_course_track as c','c.COURSE_TRACK_ID','t_college_section.COURSE_TRACK_ID')
+                    // ->join('t_student as st','st.SECTION_ID','t_college_section.SECTION_ID')
                     ->whereExists(function($query)
                         {
                             $query->select(DB::raw(1))
                                   ->from('t_student')
-                                  ->whereRaw('t_student.SECTION_ID = t_college_section.SECTION_ID');
-                        });
+                                  ->where('t_student.SECTION_ID','=',' t_college_section.SECTION_ID')
+                                   ->where('t_college_section.section_name','<>','NOT_ALLOTTED')
+                                   ->where('t_college_section.section_name','<>','');
+                        })
+                   
+                    
+                    ->orderby('t_college_section.SECTION_ID','ASC');
                     // ->join('t_student as d','d.SECTION_ID','t_college_section.SECTION_ID');
                     // ->where('SECTION_ID', '=', \App\BaseModels\Student::select('SECTION_ID'));
                     // where('email', '=', Input::get('email'))->first()

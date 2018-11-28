@@ -4,7 +4,10 @@ namespace App;
 use Auth;
 use DB;
 use App\BaseModels\Group;
-use App\Ipexamconductedfor;
+use App\BaseModels\CourseTrack;
+// use App\Ipexamconductedfor;
+// use App\Campusupload;
+// use App\Section;
 use App\BaseModels\StudyClass as Classyear;
 use App\BaseModels\Program as Tprogram;
 use App\BaseModels\Stream;
@@ -19,7 +22,34 @@ class Ipexam extends Model
  public function conduct() {
         return $this->hasMany(Ipexamconductedfor::class, 'exam_id', 'exam_id');
     }
-     
+      public function upload() {
+        return $this->hasMany(Campusupload::class, 'exam_id', 'exam_id');
+    }
+     // public function status(){
+     //  $record1="";
+     //  $record=$this->hasMany(Ipexamconductedfor::class, 'exam_id', 'exam_id');
+     //  // $record=$this->hasManyThrough(Ipexamconductedfor::class,CourseTrack::class);
+     //        //        $record->join('t_course_track as ct', function($join)
+     //        // {
+     //        //     $join->on('ct.GROUP_ID', '=',  'IP_Exam_Conducted_For.group_id');
+     //        //     $join->on('ct.STREAM_ID','=', 'IP_Exam_Conducted_For.stream_id');
+     //        //     $join->on('ct.CLASS_ID','=', 'IP_Exam_Conducted_For.classyear_id');
+     //        // })
+     //        //        ->join('t_college_section as st','ct.COURSE_TRACK_ID','st.COURSE_TRACK_ID')
+     //        //        ->where('st.PROGRAM_ID','=','ct.PROGRAM_IDs')
+     //        //        ->get();
+     //  foreach ($record as $key => $value) {
+        
+     //       $record1=DB::table('t_course_track as ct')
+     //       ->join('t_college_section as st','ct.COURSE_TRACK_ID','st.COURSE_TRACK_ID')
+     //                ->where('ct.GROUP_ID',$value->group_id)
+     //                ->where('ct.STREAM_ID',$value->stream_id)
+     //                ->where('ct.CLASS_ID',$value->classyear_id)
+     //                ->where('ct.PROGRAM_ID',$value->program_id)
+     //                ->toArray();
+     //  }
+     //  return $record1;
+     // }
 
    public static function ipcreate($data){
     // if(Auth::id()){

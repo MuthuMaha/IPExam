@@ -16,10 +16,13 @@ use Illuminate\Http\Request;
 		
 		Route::get('employeelist', 'EmployeeController@emplist');
 		Route::get('examlist', 'ExamController@examlist');
+		Route::get('examdelete', 'ExamController@examdelete');
 		Route::get('sectionlist', 'ExamController@sectionlist');
+		Route::get('skipsection', 'ExamController@skipsection');
 		Route::get('subjectlist', 'SubjectController@sublist');
 		Route::get('studlist', 'SubjectController@studlist');
 		Route::get('updatemanage', 'SubjectController@updatemanage');
+		Route::get('uploadstatus', 'SubjectController@uploadstatus');
 		Route::get('notify', 'SubjectController@notify');
 		Route::post('subjectadd', 'SubjectController@subadd');
 		Route::post('subjectup', 'SubjectController@subupdate');

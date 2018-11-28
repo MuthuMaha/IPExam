@@ -126,8 +126,8 @@ class Employee extends Authenticatable
             }
         }
                   elseif(Auth::guard('t_student')->id()){
-                    $client = Student::find(Auth::guard('t_student')->id());
-            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
+                    $client = Student::whereRaw('ADM_NO = ?',Auth::guard('t_student')->id());
+            $uc=$client;
                 $details=[
                     'NAME'=>Auth::guard('t_student')->user()->NAME,
                     'USER_NAME'=>Auth::guard('t_student')->user()->USER_NAME,
@@ -170,8 +170,8 @@ class Employee extends Authenticatable
             }
            }
            else{
-                  $client = Tparent::find(Auth::guard('tparent')->id());
-            $uc=$client->tokens()->where('created_at', '<', Carbon::now()->subDay())->delete();
+                  $client = Tparent::whereRaw('ADM_NO = ?',Auth::guard('tparent')->id());
+            $uc=$client;
             $student=Parent_details::where('ADM_NO',Auth::guard('tparent')->id())->get();
              $details=[
                     'NAME'=>$student[0]->PARENT_NAME,
