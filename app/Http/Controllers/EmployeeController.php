@@ -39,6 +39,7 @@ class EmployeeController extends Controller
       $sec=DB::table('t_college_section')
             ->select('SECTION_ID','section_name')
             ->where('section_name','<>',null)
+            ->where('COURSE_TRACK_ID','<>',null)
             ->where('section_name','<>','NOT_ALLOTTED')
             ->where('section_name','<>','DROPOUTS')
             ->where('CAMPUS_ID','=',$request->campus_id)

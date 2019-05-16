@@ -263,27 +263,28 @@ class ExamController extends Controller
 
            $examlist1=Ipexam::
                       join('0_test_types as b','b.test_type_id','=','IP_Exam_Details.Test_type_id')
-                      ->with('upload') 
+                      ->with('upload'); 
                       // ->load('status')
-                      ->paginate(6);
+                      // ->paginate(6);
                     // }
         if($request->status==1){
-            $examlist1=Ipexam::
-                      join('0_test_types as b','b.test_type_id','=','IP_Exam_Details.Test_type_id')
-                      ->with('upload') 
+            // $examlist1=Ipexam::
+            //           join('0_test_types as b','b.test_type_id','=','IP_Exam_Details.Test_type_id')
+            //           ->with('upload') 
                       // ->load('status')
-                      ->whereIn('IP_Exam_Details.exam_id',$check)              
-                      ->paginate(6);
+                      $examlist1->whereIn('IP_Exam_Details.exam_id',$check);              
+                      // ->paginate(6);
         }
         if($request->status==2){
-            $examlist1=Ipexam::
-                      join('0_test_types as b','b.test_type_id','=','IP_Exam_Details.Test_type_id')
-                      ->with('upload') 
+            // $examlist1=Ipexam::
+            //           join('0_test_types as b','b.test_type_id','=','IP_Exam_Details.Test_type_id')
+            //           ->with('upload') 
                       // ->load('status')
-                      ->whereNotIn('IP_Exam_Details.exam_id',$check)               
+                      $examlist1->whereNotIn('IP_Exam_Details.exam_id',$check);               
 
-                      ->paginate(6);
+                      // ->paginate(6);
         }
+        $examlist1=$examlist1->paginate(6);
         if($request->year!='' || $request->group!='' || $request->stream!='' || $request->program!=''){        
         // if($request->status==2 || $request->status==''){
         $examlist1=Ipexam::
@@ -296,42 +297,43 @@ class ExamController extends Controller
                    ->where('b.group_id',$g)
                    ->where('b.stream_id',$s)
                    ->where('b.program_id',$p)
-                  ->distinct()
-                  ->paginate(6);       
+                  ->distinct();
+                  // ->paginate(6);       
         // }
 
         if($request->status==1){
         
-        $examlist1=Ipexam::
-                  join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  // ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
-                  ->join('0_test_types as d','d.test_type_id','=','IP_Exam_Details.Test_type_id')
-                    ->with('upload') 
-                    // ->load('status') 
-                   ->where('b.classyear_id',$y)
-                   ->where('b.group_id',$g)
-                   ->where('b.stream_id',$s)
-                   ->where('b.program_id',$p)
-                   ->whereIn('IP_Exam_Details.exam_id',$check)                   
-                  ->distinct()
-                  ->paginate(6);
+        // $examlist1=Ipexam::
+        //           join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+        //           // ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+        //           ->join('0_test_types as d','d.test_type_id','=','IP_Exam_Details.Test_type_id')
+        //             ->with('upload') 
+        //             // ->load('status') 
+        //            ->where('b.classyear_id',$y)
+        //            ->where('b.group_id',$g)
+        //            ->where('b.stream_id',$s)
+        //            ->where('b.program_id',$p)
+                    $examlist1->whereIn('IP_Exam_Details.exam_id',$check);                  
+                  // ->distinct()
+                  // ->paginate(6);
         }
         if($request->status==2){
         
-        $examlist1=Ipexam::
-                  join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
-                  // ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
-                  ->join('0_test_types as d','d.test_type_id','=','IP_Exam_Details.Test_type_id')
-                    ->with('upload')  
-                    // ->load('status')
-                   ->where('b.classyear_id',$y)
-                   ->where('b.group_id',$g)
-                   ->where('b.stream_id',$s)
-                   ->where('b.program_id',$p)
-                   ->whereNotIn('IP_Exam_Details.exam_id',$check)                   
-                  ->distinct()
-                  ->paginate(6);
+        // $examlist1=Ipexam::
+        //           join('IP_Exam_Conducted_For as b','IP_Exam_Details.exam_id','=','b.exam_id')
+        //           // ->join('IP_Campus_Uploads as c','IP_Exam_Details.exam_id','=','c.exam_id')
+        //           ->join('0_test_types as d','d.test_type_id','=','IP_Exam_Details.Test_type_id')
+        //             ->with('upload')  
+        //             // ->load('status')
+        //            ->where('b.classyear_id',$y)
+        //            ->where('b.group_id',$g)
+        //            ->where('b.stream_id',$s)
+        //            ->where('b.program_id',$p)
+                    $examlist1->whereNotIn('IP_Exam_Details.exam_id',$check);                   
+                  // ->distinct()
+                  // ->paginate(6);
         }
+         $examlist1= $examlist1->paginate(6);
 
         }
         foreach ($examlist1 as $value) {
@@ -387,6 +389,11 @@ class ExamController extends Controller
   public function skipsection(Request $request)
     {          
       $result=Campusupload::skipsection($request);
+      return $result;
+    }
+  public function campsection(Request $request)
+    {          
+      $result=Campusupload::campsection($request);
       return $result;
     }
   public function examdelete(Request $request)

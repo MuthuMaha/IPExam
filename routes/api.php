@@ -12,13 +12,13 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!muthu
 |
 */
-		Route::post('auth-attempt', 'EmployeeController@empshow');
-		
+		Route::post('auth-attempt', 'EmployeeController@empshow');		
 		Route::get('employeelist', 'EmployeeController@emplist');
 		Route::get('examlist', 'ExamController@examlist');
 		Route::get('examdelete', 'ExamController@examdelete');
 		Route::get('sectionlist', 'ExamController@sectionlist');
 		Route::get('skipsection', 'ExamController@skipsection');
+		Route::get('campsection', 'ExamController@campsection');
 		Route::get('subjectlist', 'SubjectController@sublist');
 		Route::get('studlist', 'SubjectController@studlist');
 		Route::get('updatemanage', 'SubjectController@updatemanage');

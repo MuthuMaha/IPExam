@@ -32,5 +32,9 @@ class Tparent extends Authenticatable
         return $this->hasMany(Token::class, 'user_id', 'ADM_NO');
     }
      
+   public function parents() {
+        return $this->hasOne(Parent_details::class)->limit(1)->get();
+    }
+     
 
 }

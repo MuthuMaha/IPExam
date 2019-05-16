@@ -4,6 +4,8 @@ namespace App;
 use App\BaseModels\Campus;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Resources\CampusCollection;
+// use App\Http\Resources\Campus;
 
 class Campusupload extends Model
 {
@@ -93,10 +95,45 @@ class Campusupload extends Model
       return ['success'=>['Message'=>'Not Deleted because of some result upload']];
 
    }
+   public static function campsection($data){
+    $cond=DB::table('IP_Exam_Conducted_For')
+                              ->whereRaw('exam_id = ?',$data->exam_id)
+                              ->get();
+
+            $a=array();
+            $b=array();
+   
+             foreach ($cond as $key => $value) {
+
+                $b[]='(c.GROUP_ID="'.$value->group_id.'" and c.CLASS_ID="'.$value->classyear_id.'" and c.STREAM_ID="'.$value->stream_id.'" and t_college_section.PROGRAM_ID="'.$value->program_id.'")';
+
+
+                      }
+    $camcount=static::total($b,$data->exam_id)['count'];
+    $camcheck=static::total($b,$data->exam_id)['check1'];
+                       $examlist=new CampusCollection(Campus::
+                    // with('city','state','district')
+                   with(['section'=>function($q) use ($b){ 
+                    if(count($b)!=0){
+                     foreach ($b as $key => $value) 
+                     {
+                        $q->orwhereRaw($value);                  
+                      }  
+                    }
+                    }
+
+                  ])
+                  
+                   ->whereIn('t_campus.CAMPUS_ID',$camcount)
+                    ->distinct()
+                    ->get()); 
+                    return $examlist;
+   }
    public static function skipsection($data){
      $cond=DB::table('IP_Exam_Conducted_For')
-                              ->where('exam_id',$data->exam_id)
+                              ->whereRaw('exam_id = ?',$data->exam_id)
                               ->get();
+
             $a=array();
             $b=array();
              foreach ($cond as $key => $value) {
@@ -105,9 +142,11 @@ class Campusupload extends Model
 
 
                       }
-    $section=DB::table('t_college_section')->join('t_course_track as c','c.COURSE_TRACK_ID','t_college_section.COURSE_TRACK_ID')
+
+    $section=DB::table('t_college_section')
+                  ->join('t_course_track as c','c.COURSE_TRACK_ID','t_college_section.COURSE_TRACK_ID')
                     // ->join('t_student as st','st.SECTION_ID','t_college_section.SECTION_ID')
-                    ->whereExists(function($query)
+                  ->whereExists(function($query)
                         {
                             $query->select(DB::raw(1))
                                   ->from('t_student')
@@ -115,9 +154,14 @@ class Campusupload extends Model
                                    ->where('t_college_section.section_name','<>','NOT_ALLOTTED')
                                    ->where('t_college_section.section_name','<>','');
                         })
-                    ->orderby('t_college_section.SECTION_ID','ASC')
-                   ->orwhereRaw($b[0])->select('t_college_section.SECTION_ID','t_college_section.section_name')->get();
-                    
+                  ->orderby('t_college_section.SECTION_ID','ASC')
+                  ->select('t_college_section.SECTION_ID','t_college_section.section_name')
+                  ->orwhere(function($q) use ($b) {
+                    for($i=0;$i<=(count($b)-1);$i++) {
+                      $q->orwhereRaw($b[$i]);
+                        }  
+                   })
+                  ->get();
                
                     
                     return $section;
@@ -237,7 +281,7 @@ class Campusupload extends Model
 
                   ])
                    ->with(['check'=>function($q) use ($exam_id){
-                    $q->where('exam_id',$exam_id);
+                    $q->whereRaw('exam_id = ?',$exam_id);
                    }])
                    ->where('CAMPUS_ID',$data->campus_id)
                     ->distinct()
@@ -260,8 +304,8 @@ class Campusupload extends Model
    }
    public static function uploadstatus($data){
 
-      $campus=Campusupload::select('CAMPUS_ID')->where('exam_id',$data->exam_id)->distinct()->get();
-      $section=Campusupload::select('section_id')->where('exam_id',$data->exam_id)->distinct()->get();
+      $campus=Campusupload::select('CAMPUS_ID')->whereRaw('exam_id = ?',$data->exam_id)->distinct()->get();
+      $section=Campusupload::select('section_id')->whereRaw('exam_id = ?',$data->exam_id)->distinct()->get();
       return [
               'Campus'=>$campus,
               'Section'=>$section,
@@ -289,7 +333,7 @@ class Campusupload extends Model
 
                   ])
                    ->with(['check'=>function($q) use ($exam_id){
-                    $q->where('exam_id',$exam_id);
+                    $q->whereRaw('exam_id = ?',$exam_id);
                    }])
                    // ->where('section','<>','')
                     ->distinct()

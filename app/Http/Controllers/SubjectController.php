@@ -136,10 +136,11 @@ class SubjectController extends Controller
                     $value=array();
                    
                               $exam_id=$request->EXAM_ID;
+                              $SECTION_ID=explode(',', $request->SECTION_ID);
 
           $examlist=Campus::
                     with('city','state','district')
-                   ->with(['section'=>function($q) use ($a,$b){    
+                   ->with(['section'=>function($q) use ($a,$b,$SECTION_ID){    
                    // $q->where('t_college_section.SECTION_ID', '=', DB::table('t_student')->get('SECTION_ID'));
                     if(count($b)!=0){
                      foreach ($b as $key => $value) 
@@ -147,13 +148,15 @@ class SubjectController extends Controller
                         $q->orwhereRaw($value);                  
                       }  
                     }
+                   $q->whereIn('t_college_section.SECTION_ID',$SECTION_ID);
+
                     }
 
                   ])
                    ->with(['check'=>function($q) use ($exam_id){
                     $q->where('exam_id',$exam_id);
                    }])
-                   ->whereIn('CAMPUS_ID',$request->CAMPUS_ID)
+                   // ->whereIn('CAMPUS_ID',$request->CAMPUS_ID)
                     ->distinct()
                     ->get();
                     // return $examlist;        
