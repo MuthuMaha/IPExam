@@ -13,7 +13,7 @@ class Student extends Authenticatable
     //
     
     use Notifiable;
-    protected $table = 't_student';
+    protected $table = 'scaitsqb.t_student_bio';
     protected $primaryKey = 'ADM_NO';
     private static $test_types=[];
 
