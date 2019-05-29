@@ -67,7 +67,7 @@ class SubjectController extends Controller
                             ->where('exam_id','=',$request->exam_id)
                             ->get();
       $subject=DB::select("SHOW COLUMNS FROM esaplive.IP_Exam_Marks;");
-      $res=DB::table('t_student as a')
+      $res=DB::table('scaitsqb.t_student_bio as a')
           ->leftjoin('IP_Exam_Marks as b','a.ADM_NO','=','b.STUD_ID')
         //     ->join('IP_Exam_Marks as b', function($join)
         // {
@@ -95,7 +95,7 @@ class SubjectController extends Controller
                 'exam_id'=>$request->EXAM_ID,
                 'status'=>'0'
               ]);
-            $student=DB::table('t_student')->where('SECTION_ID',$request->SECTION_ID)->get();
+            $student=DB::table('scaitsqb.t_student_bio')->where('SECTION_ID',$request->SECTION_ID)->get();
 
         foreach ($student as $key => $value) 
         {
@@ -171,7 +171,7 @@ class SubjectController extends Controller
                   'exam_id'=>$request->EXAM_ID,
                   'status'=>'0'
                 ]);
-        $student=DB::table('t_student as a')
+        $student=DB::table('scaitsqb.t_student_bio as a')
           ->where('a.SECTION_ID','=',$value1->SECTION_ID)->get();
 
           foreach ($student as $key => $value) 
@@ -263,7 +263,7 @@ class SubjectController extends Controller
                     ->where('a.subject_name',$a[$i])
                     ->where('b.SECTION_ID',$request->SECTION_ID)
                     ->get();
-      $res=DB::table('t_student as a')
+      $res=DB::table('scaitsqb.t_student_bio as a')
             ->leftjoin('IP_Exam_Marks as b','a.ADM_NO','=','b.STUD_ID')
             ->where('a.SECTION_ID','=',$request->SECTION_ID)
             // ->where('b.exam_id','=',$request->exam_id)

@@ -149,8 +149,8 @@ class Campusupload extends Model
                   ->whereExists(function($query)
                         {
                             $query->select(DB::raw(1))
-                                  ->from('t_student')
-                                  ->where('t_student.SECTION_ID','=','t_college_section.SECTION_ID')
+                                  ->from('scaitsqb.t_student_bio')
+                                  ->where('scaitsqb.t_student_bio.SECTION_ID','=','t_college_section.SECTION_ID')
                                    ->where('t_college_section.section_name','<>','NOT_ALLOTTED')
                                    ->where('t_college_section.section_name','<>','');
                         })

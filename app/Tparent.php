@@ -8,8 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Tparent extends Authenticatable
 {
     use Notifiable;
-     protected $table='t_student';
-     protected $guard = 't_student';
+     protected $table='scaitsqb.t_student_bio';
+     protected $guard = 'scaitsqb.t_student_bio';
     //  protected $fillable = [
     //     'name', 'email', 'payroll_id','password','description',
     // ];

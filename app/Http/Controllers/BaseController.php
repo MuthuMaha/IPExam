@@ -145,7 +145,7 @@ class BaseController extends Controller
         $class_id= $request->class_id;
         $program_id= $request->program_id;
         //
-         $data1=DB::table('t_student as a')
+         $data1=DB::table('scaitsqb.t_student_bio as a')
                 ->join('t_course_group as b','a.GROUP_NAME','=','b.GROUP_NAME')
                 ->where('a.STREAM_ID',$stream_id)
                 ->where('a.CLASS_ID',$class_id)
@@ -188,7 +188,7 @@ class BaseController extends Controller
         $program_id= $request->program_id;
         $group_id= $request->group_id;
         $section_id= $request->section_id;
-       $data=DB::table('t_student as a')
+       $data=DB::table('scaitsqb.t_student_bio as a')
                 ->join('t_course_group as b','a.GROUP_NAME','=','b.GROUP_NAME')
                 ->where('b.GROUP_ID',$group_id)
                 ->where('a.STREAM_ID',$stream_id)
@@ -306,7 +306,7 @@ class BaseController extends Controller
         // $section_id= $request->section_id;
         for ($i=0; $i <=count($section) ; $i++) { 
          if(isset($section[$i]->section_name))
-       $data1=DB::table('t_student as a')
+       $data1=DB::table('scaitsqb.t_student_bio as a')
                 ->join('t_course_group as b','a.GROUP_NAME','=','b.GROUP_NAME')
                 ->join('t_college_section as c','c.section_id','a.SECTION_ID')
                 ->where('b.GROUP_ID',$group_id)
@@ -329,7 +329,7 @@ class BaseController extends Controller
       }
                 // $chek+=count($data1);
         }
-             $data=DB::table('t_student as a')
+             $data=DB::table('scaitsqb.scaitsqb.t_student_bio_bio as a')
                 ->join('t_course_group as b','a.GROUP_NAME','=','b.GROUP_NAME')
                 ->join('t_college_section as c','c.section_id','a.SECTION_ID')
                 ->where('b.GROUP_ID',$group_id)
@@ -349,7 +349,7 @@ class BaseController extends Controller
                             'Details'=>$query,
                     ];
       }
-          $query['Test'] = DB::select("select DISTINCT ipd.Exam_name,ipd.Exam_id from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from t_student t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id) ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$request->test_type_id."'"
+          $query['Test'] = DB::select("select DISTINCT ipd.Exam_name,ipd.Exam_id from IP_Exam_Details ipd left join IP_Exam_Conducted_For ecf on ipd.exam_id=ecf.Exam_id inner join (select t.CAMPUS_ID,ct.GROUP_ID,pn.PROGRAM_ID,t.class_id,ts.STREAM_ID from scaitsqb.t_student_bio t left join t_course_track ct on t.COURSE_TRACK_ID=ct.COURSE_TRACK_ID left join t_study_class sc on sc.class_id=t.class_id left join t_program_name pn on t.PROGRAM_ID=pn.PROGRAM_ID left join t_stream ts on ts.STREAM_ID=t.stream_id) ds on ecf.classyear_id=ds.class_id and ecf.stream_id=ds.stream_id and ecf.program_id=ds.program_id and ecf.exam_id=ipd.exam_id and ds.group_id = ecf.group_id and ipd.Test_type_id='".$request->test_type_id."'"
                     );   
 
           if(!count($query['Test']))

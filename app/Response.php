@@ -78,7 +78,7 @@ class Response extends Model
 
   
       $qdata=DB::table('IP_Queries as a')
-              ->join('t_student as b','a.stud_id','=','b.ADM_NO')
+              ->join('scaitsqb.t_student_bio as b','a.stud_id','=','b.ADM_NO')
               ->join('t_parent_details as c','a.stud_id','=','c.ADM_NO')
               ->join('0_subjects as d','d.subject_id','=','a.subject_id')
               ->where([
